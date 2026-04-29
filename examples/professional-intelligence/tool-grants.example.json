@@ -1,0 +1,82 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "ToolGrant",
+    "metadata": {
+      "grantId": "grant://professional-intelligence/opportunity-review-agent/search-read",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "agentId": "agent://professional-intelligence/opportunity-review-agent",
+      "toolRef": "tool://sherlock-search/search-packet-read",
+      "scope": "read-evaluate-only",
+      "constraints": ["workroom-scoped", "source-citation-required", "evidence-required", "no-secret-access"],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/grant-search-read"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "ToolGrant",
+    "metadata": {
+      "grantId": "grant://professional-intelligence/opportunity-review-agent/workroom-update",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "agentId": "agent://professional-intelligence/opportunity-review-agent",
+      "toolRef": "tool://prophet-workspace/professional-workroom-update",
+      "scope": "draft-update-only",
+      "constraints": ["policy-decision-required", "evidence-required", "human-review-required"],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/grant-workroom-update"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "ToolGrant",
+    "metadata": {
+      "grantId": "grant://professional-intelligence/relationship-agent/context-read",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "agentId": "agent://professional-intelligence/relationship-agent",
+      "toolRef": "tool://memory-mesh/context-pack-read",
+      "scope": "read-only",
+      "constraints": ["workroom-scoped", "no-memory-write", "evidence-required"],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/grant-context-read"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "ToolGrant",
+    "metadata": {
+      "grantId": "grant://professional-intelligence/policy-review-agent/policy-evaluate",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "agentId": "agent://professional-intelligence/policy-review-agent",
+      "toolRef": "tool://policy-fabric/professional-policy-decision-evaluate",
+      "scope": "evaluate-only",
+      "constraints": ["no-policy-write", "evidence-required", "obligation-reference-required"],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/grant-policy-evaluate"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "ToolGrant",
+    "metadata": {
+      "grantId": "grant://professional-intelligence/workspace-setup-agent/workroom-create",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "agentId": "agent://professional-intelligence/workspace-setup-agent",
+      "toolRef": "tool://prophet-workspace/professional-workroom-create",
+      "scope": "create-draft-only",
+      "constraints": ["policy-decision-required", "evidence-required", "no-external-release"],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/grant-workroom-create"
+    }
+  }
+]
