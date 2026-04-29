@@ -1,0 +1,16 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "RevocationRecord",
+  "metadata": {
+    "revocationId": "revocation://agent/demo-analyst/current",
+    "createdAt": "2026-04-29T00:00:00Z"
+  },
+  "spec": {
+    "agentId": "agent://socioprophet/demo-analyst",
+    "revokedToolGrantRefs": [],
+    "revokedSurfaceRefs": [],
+    "status": "not-revoked",
+    "reasonCodes": ["active-authority"],
+    "evidenceRef": "evidence://agent-registry/demo/revocation-001"
+  }
+}
