@@ -1,0 +1,22 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "AgentSpec",
+  "metadata": {
+    "agentId": "agent://socioprophet/demo-analyst",
+    "agentKind": "codex",
+    "version": "0.1.0"
+  },
+  "spec": {
+    "ownerRef": "team://socioprophet/model-fabric",
+    "allowedSurfaceRefs": [
+      "surface://language/summarization",
+      "surface://model-routing/demo",
+      "surface://guardrail/default-safe-text"
+    ],
+    "toolGrantRefs": ["grant://agent/demo-analyst/model-route-read"],
+    "memoryPolicyRef": "policy://memory/session-scoped-no-training",
+    "sessionPolicyRef": "policy://session/evidence-required",
+    "evidenceRef": "evidence://agent-registry/demo/agent-spec-001",
+    "revocationRef": "revocation://agent/demo-analyst/current"
+  }
+}
