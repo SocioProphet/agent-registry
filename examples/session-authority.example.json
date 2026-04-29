@@ -1,0 +1,17 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "SessionAuthority",
+  "metadata": {
+    "sessionId": "session://agent/demo-analyst/001",
+    "createdAt": "2026-04-29T00:00:00Z"
+  },
+  "spec": {
+    "agentId": "agent://socioprophet/demo-analyst",
+    "activeToolGrantRefs": ["grant://agent/demo-analyst/model-route-read"],
+    "activeSurfaceRefs": ["surface://model-routing/demo", "surface://guardrail/default-safe-text"],
+    "sessionPolicyRef": "policy://session/evidence-required",
+    "memoryPolicyRef": "policy://memory/session-scoped-no-training",
+    "evidenceRef": "evidence://agent-registry/demo/session-authority-001",
+    "status": "active"
+  }
+}
