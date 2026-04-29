@@ -1,0 +1,23 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "SessionAuthority",
+  "metadata": {
+    "sessionId": "session://professional-intelligence/demo-001",
+    "createdAt": "2026-04-29T16:35:00Z"
+  },
+  "spec": {
+    "agentId": "agent://professional-intelligence/opportunity-review-agent",
+    "activeToolGrantRefs": [
+      "grant://professional-intelligence/opportunity-review-agent/search-read",
+      "grant://professional-intelligence/opportunity-review-agent/workroom-update"
+    ],
+    "activeSurfaceRefs": [
+      "surface://professional-intelligence/client-opportunity-review",
+      "surface://workspace/professional-workroom"
+    ],
+    "sessionPolicyRef": "policy://session/evidence-required",
+    "memoryPolicyRef": "policy://memory/workroom-scoped",
+    "evidenceRef": "evidence://agent-registry/professional-intelligence/session-demo-001",
+    "status": "active"
+  }
+}

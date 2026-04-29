@@ -1,0 +1,97 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentSpec",
+    "metadata": {
+      "agentId": "agent://professional-intelligence/opportunity-review-agent",
+      "agentKind": "codex",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/professional-intelligence",
+      "allowedSurfaceRefs": [
+        "surface://professional-intelligence/client-opportunity-review",
+        "surface://workspace/professional-workroom",
+        "surface://policy/professional-policy-decision"
+      ],
+      "toolGrantRefs": [
+        "grant://professional-intelligence/opportunity-review-agent/search-read",
+        "grant://professional-intelligence/opportunity-review-agent/workroom-update"
+      ],
+      "memoryPolicyRef": "policy://memory/workroom-scoped",
+      "sessionPolicyRef": "policy://session/evidence-required",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/opportunity-review-agent",
+      "revocationRef": "revocation://professional-intelligence/current"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentSpec",
+    "metadata": {
+      "agentId": "agent://professional-intelligence/relationship-agent",
+      "agentKind": "copilot",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/professional-intelligence",
+      "allowedSurfaceRefs": [
+        "surface://institution-graph/relationship-map",
+        "surface://memory/context-pack",
+        "surface://workspace/professional-workroom"
+      ],
+      "toolGrantRefs": [
+        "grant://professional-intelligence/relationship-agent/context-read"
+      ],
+      "memoryPolicyRef": "policy://memory/read-only-workroom-scoped",
+      "sessionPolicyRef": "policy://session/evidence-required",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/relationship-agent",
+      "revocationRef": "revocation://professional-intelligence/current"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentSpec",
+    "metadata": {
+      "agentId": "agent://professional-intelligence/policy-review-agent",
+      "agentKind": "codex",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/professional-intelligence",
+      "allowedSurfaceRefs": [
+        "surface://policy/professional-policy-decision",
+        "surface://contractforge/obligation-ledger"
+      ],
+      "toolGrantRefs": [
+        "grant://professional-intelligence/policy-review-agent/policy-evaluate"
+      ],
+      "memoryPolicyRef": "policy://memory/no-write",
+      "sessionPolicyRef": "policy://session/evidence-required",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/policy-review-agent",
+      "revocationRef": "revocation://professional-intelligence/current"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentSpec",
+    "metadata": {
+      "agentId": "agent://professional-intelligence/workspace-setup-agent",
+      "agentKind": "system",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/professional-intelligence",
+      "allowedSurfaceRefs": [
+        "surface://workspace/professional-workroom",
+        "surface://agentplane/workflow-bundle"
+      ],
+      "toolGrantRefs": [
+        "grant://professional-intelligence/workspace-setup-agent/workroom-create"
+      ],
+      "memoryPolicyRef": "policy://memory/no-write",
+      "sessionPolicyRef": "policy://session/evidence-required",
+      "evidenceRef": "evidence://agent-registry/professional-intelligence/workspace-setup-agent",
+      "revocationRef": "revocation://professional-intelligence/current"
+    }
+  }
+]
