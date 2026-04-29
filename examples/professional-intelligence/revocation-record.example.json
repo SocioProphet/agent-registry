@@ -1,0 +1,16 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "RevocationRecord",
+  "metadata": {
+    "revocationId": "revocation://professional-intelligence/current",
+    "createdAt": "2026-04-29T16:35:00Z"
+  },
+  "spec": {
+    "agentId": "agent://professional-intelligence/opportunity-review-agent",
+    "revokedToolGrantRefs": [],
+    "revokedSurfaceRefs": [],
+    "status": "not-revoked",
+    "reasonCodes": ["active-professional-intelligence-demo-authority"],
+    "evidenceRef": "evidence://agent-registry/professional-intelligence/revocation-current"
+  }
+}
