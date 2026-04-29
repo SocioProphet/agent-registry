@@ -1,0 +1,21 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "ToolGrant",
+  "metadata": {
+    "grantId": "grant://agent/demo-analyst/model-route-read",
+    "version": "0.1.0"
+  },
+  "spec": {
+    "agentId": "agent://socioprophet/demo-analyst",
+    "toolRef": "tool://model-router/emit-demo-decision",
+    "scope": "read-evaluate-only",
+    "constraints": [
+      "no-live-provider-call",
+      "no-secret-access",
+      "no-model-artifact-write",
+      "evidence-required"
+    ],
+    "expiresAt": "2026-12-31T23:59:59Z",
+    "evidenceRef": "evidence://agent-registry/demo/tool-grant-001"
+  }
+}
