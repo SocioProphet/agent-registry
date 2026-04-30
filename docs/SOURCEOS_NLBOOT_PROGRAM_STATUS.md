@@ -17,11 +17,11 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | NLBoot usable MVP | 72% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, release workflow, operator docs. | Commit Cargo.lock, add SBOM release artifact, prove release workflow. |
 | SourceOS devtools | 62% | `sourceosctl` read-only/dry-run scaffold PR #2 merged; issue #1 closed. | Add package/install surface, schema-backed evidence validation, and NLBoot release inspection integration. |
 | SourceOS spec schemas | 58% | NLBoot object schemas PR #69 merged; issue #68 closed. Canonical contracts now exist for current slice. | Add ReleaseSet, Fingerprint, ConfigSource, TokenDoor, and GitRefBuild schemas. |
-| SourceOS boot integration | 56% | NLBoot integration docs/fixtures/validation/maturity PR #12 merged; issue #11 closed. | Add platform adapter specs and align implementation to sourceos-spec schemas. |
-| SocioProphet Web evidence UI | 43% | NLBoot evidence dashboard PR #21 now scope-clean and approved, but product-build workflow is still `action_required`. | Approve/run workflow or wait for CI unlock; merge after green checks. |
+| SourceOS boot integration | 60% | NLBoot integration PR #12 merged; M2 Recovery/Installer packaging issue #13 created and assigned. | Wait for Copilot PR on #13; review/merge if docs/fixtures/validation only. |
+| SocioProphet Web evidence UI | 43% | NLBoot evidence dashboard PR #21 scope-clean and approved; product-build workflow still `action_required`. | Approve/run workflow or wait for CI unlock; merge after green checks. |
 | Homebrew packaging | 55% | NLBoot release-template workflow PR #8 merged; issue #6 closed. No active formula with fake hashes. | Publish real NLBoot release, then run generation workflow for versioned formula. |
-| Agent dispatch operations | 82% | Dossier added, repo instructions in place, Copilot assignment working, branches/PRs created, review/merge loop active. | Continue PR sweep, merge clean PRs, update ledger each turn. |
-| M2 platform proof | 42% | M2 adapter dry-run evidence path exists; sourceos-spec now has Apple Silicon adapter evidence schema; boot integration docs landed. | Add SourceOS Recovery/Installer packaging spec and Asahi-compatible implementation task. |
+| Agent dispatch operations | 84% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, new M2 packaging issue dispatched. | Continue PR sweep, merge clean PRs, update ledger each turn. |
+| M2 platform proof | 46% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; boot integration docs landed; M2 packaging issue #13 is active. | Review/merge M2 packaging spec PR when produced; then move to Recovery/Installer artifact build lane. |
 
 ## Active issue and PR queue
 
@@ -29,6 +29,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | --- | ---: | ---: | --- | --- | --- |
 | `SourceOS-Linux/sourceos-devtools` | #1 | #2 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #11 | #12 | merged / closed | Copilot | complete for current slice. |
+| `SourceOS-Linux/sourceos-boot` | #13 | — | assigned / dispatched | Copilot + Codex comments | wait for PR; reinforce if idle. |
 | `SourceOS-Linux/sourceos-spec` | #68 | #69 | merged / closed | Copilot | complete for current slice. |
 | `mdheller/socioprophet-web` | #20 | #21 | approved / action_required | Copilot | approve or unlock workflow, then merge after green checks. |
 | `SocioProphet/homebrew-prophet` | #6 | #8 | merged / closed | Copilot | complete for current slice. |
@@ -44,6 +45,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 - `SourceOS-Linux/sourceos-spec#69` merged and `#68` closed.
 - `SourceOS-Linux/sourceos-devtools#2` merged and `#1` closed.
 - `SocioProphet/homebrew-prophet#8` merged and `#6` closed.
+- `SourceOS-Linux/sourceos-boot#13` created, assigned, and dispatched for M2 SourceOS Recovery/Installer packaging spec.
 
 ## Percentage policy
 
