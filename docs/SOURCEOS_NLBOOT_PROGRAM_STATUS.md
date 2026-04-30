@@ -14,13 +14,13 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 
 | Lane | Current % | Current state | Next action |
 | --- | ---: | --- | --- |
-| NLBoot usable MVP | 85% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, release workflow, release-candidate workflow proven, Cargo.lock committed, RC artifact uploaded, SBOM helper added, release-candidate/tag workflows wired for SBOM, operator-test release notes drafted. | Prove SBOM-enabled release-candidate workflow on main, then cut first operator-test tag when ready. |
+| NLBoot usable MVP | 88% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, Cargo.lock committed, release-candidate workflow proven twice, SBOM helper added, SBOM-enabled RC workflow proven, RC artifact uploaded with SBOM path, operator-test release notes drafted. | Cut first operator-test tag only after final release-note review and downstream devtools/boot PR blockers are resolved or explicitly deferred. |
 | SourceOS devtools | 66% | `sourceosctl` read-only/dry-run scaffold merged; schema-backed NLBoot evidence validation PR #4 exists but is draft/action-required. | Approve/unlock workflow or wait for Copilot to mark #4 ready; merge once checks are green. |
 | SourceOS spec schemas | 70% | NLBoot schemas plus ReleaseSet/Fingerprint/ConfigSource/TokenDoor/GitRefBuild schemas merged; issues #68 and #72 closed. | Use schemas downstream in devtools/web/boot; add negative examples and conformance matrices later. |
 | SourceOS boot integration | 68% | NLBoot integration and M2 packaging specs merged; AppleSiliconAdapterEvidence normalization PR #16 exists but is draft/action-required. | Approve/unlock workflow or wait for Copilot to mark #16 ready; merge once checks are green. |
 | SocioProphet Web evidence UI | 60% | NLBoot evidence dashboard PR #21 merged and issue #20 closed after product-build passed. | Add schema-backed fixtures/API integration later; current mock dashboard slice complete. |
 | Homebrew packaging | 55% | NLBoot release-template workflow PR #8 merged; issue #6 closed. No active formula with fake hashes. | Publish real NLBoot release, then run generation workflow for versioned formula. |
-| Agent dispatch operations | 91% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, current blockers tracked. | Continue PR sweep, merge clean PRs, update ledger each turn. |
+| Agent dispatch operations | 92% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, current blockers tracked, SBOM proof PR #9 merged. | Continue PR sweep, merge clean PRs, update ledger each turn. |
 | M2 platform proof | 58% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 normal and Recovery/Installer packaging spec and dry-run fixtures merged; normalization PR #16 active. | Merge normalization design/fixtures, then move to Recovery/Installer artifact build lane. |
 
 ## Active issue and PR queue
@@ -37,7 +37,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | `mdheller/socioprophet-web` | #20 | #21 | merged / closed | Copilot | complete for current slice. |
 | `SocioProphet/homebrew-prophet` | #6 | #8 | merged / closed | Copilot | complete for current slice. |
 | `SociOS-Linux/nlboot` | repo-local | #8 | merged | ChatGPT | release-candidate proof complete. |
-| `SociOS-Linux/nlboot` | repo-local | — | direct work | ChatGPT | SBOM helper/workflow wiring and release notes draft complete; SBOM-enabled RC proof pending. |
+| `SociOS-Linux/nlboot` | repo-local | #9 | merged | ChatGPT | SBOM-enabled release-candidate proof complete. |
 
 ## Completed administrative items
 
@@ -57,7 +57,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 - `SociOS-Linux/nlboot` now has deterministic `tools/cargo_metadata_to_spdx.py` SBOM helper.
 - `SociOS-Linux/nlboot` release-candidate and tagged release workflows are wired to include `sbom.spdx.json`.
 - `SociOS-Linux/nlboot` has draft `docs/RELEASE_NOTES_NLBOOT_CLIENT_V0_1_0_OPERATOR_TEST.md`.
-- `SociOS-Linux/nlboot` has `AGENT_TASKS/prove-sbom-release-candidate.md` for the SBOM-enabled RC proof.
+- `SociOS-Linux/nlboot#9` merged after validation and SBOM-enabled release-candidate workflows passed; RC artifact `nlboot-client-release-candidate` uploaded with digest `sha256:a711b0abbcab5c72105bf80728e82963859883bd205ee7ce923ea690ce9433cb`.
 
 ## Percentage policy
 
