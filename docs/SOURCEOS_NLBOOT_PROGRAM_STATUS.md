@@ -17,11 +17,11 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | NLBoot usable MVP | 72% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, release workflow, operator docs. | Commit Cargo.lock, add SBOM release artifact, prove release workflow. |
 | SourceOS devtools | 62% | `sourceosctl` read-only/dry-run scaffold PR #2 merged; issue #1 closed. | Add package/install surface, schema-backed evidence validation, and NLBoot release inspection integration. |
 | SourceOS spec schemas | 58% | NLBoot object schemas PR #69 merged; issue #68 closed. Canonical contracts now exist for current slice. | Add ReleaseSet, Fingerprint, ConfigSource, TokenDoor, and GitRefBuild schemas. |
-| SourceOS boot integration | 60% | NLBoot integration PR #12 merged; M2 Recovery/Installer packaging issue #13 created and assigned. | Wait for Copilot PR on #13; review/merge if docs/fixtures/validation only. |
-| SocioProphet Web evidence UI | 43% | NLBoot evidence dashboard PR #21 scope-clean and approved; product-build workflow still `action_required`. | Approve/run workflow or wait for CI unlock; merge after green checks. |
+| SourceOS boot integration | 60% | NLBoot integration PR #12 merged; M2 Recovery/Installer packaging issue #13 active; draft PR #14 exists with zero changed files. | Wait for Copilot to complete #14; review/merge if docs/fixtures/validation only. |
+| SocioProphet Web evidence UI | 45% | NLBoot evidence dashboard PR #21 scope-clean and approved; product-build workflow moved from `action_required` to `in_progress`. | Wait for workflow result; merge if green. |
 | Homebrew packaging | 55% | NLBoot release-template workflow PR #8 merged; issue #6 closed. No active formula with fake hashes. | Publish real NLBoot release, then run generation workflow for versioned formula. |
-| Agent dispatch operations | 84% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, new M2 packaging issue dispatched. | Continue PR sweep, merge clean PRs, update ledger each turn. |
-| M2 platform proof | 46% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; boot integration docs landed; M2 packaging issue #13 is active. | Review/merge M2 packaging spec PR when produced; then move to Recovery/Installer artifact build lane. |
+| Agent dispatch operations | 85% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, active blockers tracked. | Continue PR sweep, merge clean PRs, update ledger each turn. |
+| M2 platform proof | 47% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 packaging PR #14 is engaged but not delivered. | Push Copilot to complete packaging PR; then move to Recovery/Installer artifact build lane. |
 
 ## Active issue and PR queue
 
@@ -29,9 +29,9 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | --- | ---: | ---: | --- | --- | --- |
 | `SourceOS-Linux/sourceos-devtools` | #1 | #2 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #11 | #12 | merged / closed | Copilot | complete for current slice. |
-| `SourceOS-Linux/sourceos-boot` | #13 | — | assigned / dispatched | Copilot + Codex comments | wait for PR; reinforce if idle. |
+| `SourceOS-Linux/sourceos-boot` | #13 | #14 | draft / zero files | Copilot + Codex comments | Copilot must add files or report blocker. |
 | `SourceOS-Linux/sourceos-spec` | #68 | #69 | merged / closed | Copilot | complete for current slice. |
-| `mdheller/socioprophet-web` | #20 | #21 | approved / action_required | Copilot | approve or unlock workflow, then merge after green checks. |
+| `mdheller/socioprophet-web` | #20 | #21 | approved / checks running | Copilot | merge after green checks. |
 | `SocioProphet/homebrew-prophet` | #6 | #8 | merged / closed | Copilot | complete for current slice. |
 
 ## Completed administrative items
