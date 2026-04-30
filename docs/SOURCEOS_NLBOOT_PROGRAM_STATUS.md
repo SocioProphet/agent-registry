@@ -14,24 +14,24 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 
 | Lane | Current % | Current state | Next action |
 | --- | ---: | --- | --- |
-| NLBoot usable MVP | 88% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, Cargo.lock committed, release-candidate workflow proven twice, SBOM helper added, SBOM-enabled RC workflow proven, RC artifact uploaded with SBOM path, operator-test release notes drafted. | Cut first operator-test tag only after final release-note review and downstream devtools/boot PR blockers are resolved or explicitly deferred. |
-| SourceOS devtools | 66% | `sourceosctl` read-only/dry-run scaffold merged; schema-backed NLBoot evidence validation PR #4 exists but is draft/action-required. | Approve/unlock workflow or wait for Copilot to mark #4 ready; merge once checks are green. |
+| NLBoot usable MVP | 88% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, Cargo.lock committed, release-candidate workflow proven twice, SBOM helper added, SBOM-enabled RC workflow proven, RC artifact uploaded with SBOM path, operator-test release notes drafted. | Cut first operator-test tag only after final release-note review and downstream release decision. |
+| SourceOS devtools | 74% | `sourceosctl` read-only/dry-run scaffold merged; schema-backed NLBoot evidence validation PR #5 merged and issue #3 closed; superseded draft PR #4 closed. | Add package/install surface and release artifact inspection integration. |
 | SourceOS spec schemas | 70% | NLBoot schemas plus ReleaseSet/Fingerprint/ConfigSource/TokenDoor/GitRefBuild schemas merged; issues #68 and #72 closed. | Use schemas downstream in devtools/web/boot; add negative examples and conformance matrices later. |
-| SourceOS boot integration | 68% | NLBoot integration and M2 packaging specs merged; AppleSiliconAdapterEvidence normalization PR #16 exists but is draft/action-required. | Approve/unlock workflow or wait for Copilot to mark #16 ready; merge once checks are green. |
+| SourceOS boot integration | 74% | NLBoot integration and M2 packaging specs merged; AppleSiliconAdapterEvidence normalization PR #17 merged and issue #15 closed; superseded draft PR #16 closed. | Move to Recovery/Installer artifact build lane and platform-entry descriptor adapter task. |
 | SocioProphet Web evidence UI | 60% | NLBoot evidence dashboard PR #21 merged and issue #20 closed after product-build passed. | Add schema-backed fixtures/API integration later; current mock dashboard slice complete. |
 | Homebrew packaging | 55% | NLBoot release-template workflow PR #8 merged; issue #6 closed. No active formula with fake hashes. | Publish real NLBoot release, then run generation workflow for versioned formula. |
-| Agent dispatch operations | 92% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, current blockers tracked, SBOM proof PR #9 merged. | Continue PR sweep, merge clean PRs, update ledger each turn. |
-| M2 platform proof | 58% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 normal and Recovery/Installer packaging spec and dry-run fixtures merged; normalization PR #16 active. | Merge normalization design/fixtures, then move to Recovery/Installer artifact build lane. |
+| Agent dispatch operations | 93% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, duplicate draft PRs cleaned up, SBOM proof PR #9 merged. | Continue PR sweep, merge clean PRs, update ledger each turn. |
+| M2 platform proof | 66% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 normal and Recovery/Installer packaging spec and normalization design/fixtures merged. | Move to Recovery/Installer artifact build lane and platform-entry descriptor implementation planning. |
 
 ## Active issue and PR queue
 
 | Repo | Issue | PR | State | Owner signal | Next action |
 | --- | ---: | ---: | --- | --- | --- |
 | `SourceOS-Linux/sourceos-devtools` | #1 | #2 | merged / closed | Copilot | complete for current slice. |
-| `SourceOS-Linux/sourceos-devtools` | #3 | #4 | draft / action_required | Copilot + Codex comments | mark ready/unlock workflow, then merge when green. |
+| `SourceOS-Linux/sourceos-devtools` | #3 | #5 | merged / closed | Copilot + ChatGPT replacement PR | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #11 | #12 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #13 | #14 | merged / closed | Copilot | complete for current slice. |
-| `SourceOS-Linux/sourceos-boot` | #15 | #16 | draft / action_required | Copilot + Codex comments | mark ready/unlock workflow, then merge when green. |
+| `SourceOS-Linux/sourceos-boot` | #15 | #17 | merged / closed | Copilot + ChatGPT replacement PR | complete for current slice. |
 | `SourceOS-Linux/sourceos-spec` | #68 | #69 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-spec` | #72 | #73 | merged / closed | Copilot | complete for current slice. |
 | `mdheller/socioprophet-web` | #20 | #21 | merged / closed | Copilot | complete for current slice. |
@@ -58,6 +58,8 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 - `SociOS-Linux/nlboot` release-candidate and tagged release workflows are wired to include `sbom.spdx.json`.
 - `SociOS-Linux/nlboot` has draft `docs/RELEASE_NOTES_NLBOOT_CLIENT_V0_1_0_OPERATOR_TEST.md`.
 - `SociOS-Linux/nlboot#9` merged after validation and SBOM-enabled release-candidate workflows passed; RC artifact `nlboot-client-release-candidate` uploaded with digest `sha256:a711b0abbcab5c72105bf80728e82963859883bd205ee7ce923ea690ce9433cb`.
+- `SourceOS-Linux/sourceos-devtools#5` merged and `#3` closed; superseded draft `#4` closed.
+- `SourceOS-Linux/sourceos-boot#17` merged and `#15` closed; superseded draft `#16` closed.
 
 ## Percentage policy
 
