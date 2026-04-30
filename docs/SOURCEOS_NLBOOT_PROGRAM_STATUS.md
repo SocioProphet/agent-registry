@@ -15,23 +15,23 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | Lane | Current % | Current state | Next action |
 | --- | ---: | --- | --- |
 | NLBoot usable MVP | 72% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, release workflow, operator docs. | Commit Cargo.lock, add SBOM release artifact, prove release workflow. |
-| SourceOS devtools | 32% | Repo created, README/scope/docs/agent instructions/maturity/Makefile/CI added; `sourceosctl` scaffold issue assigned. | Wait for Copilot PR or scaffold read-only CLI directly if idle. |
-| SourceOS spec schemas | 25% | NLBoot schema issue assigned; repo instructions added. | Wait for Copilot PR; define BootPlan/ArtifactCache/Proof/Adapter schemas if idle. |
-| SourceOS boot integration | 25% | NLBoot integration issue assigned; repo instructions added. | Wait for Copilot PR; add integration fixtures if idle. |
-| SocioProphet Web evidence UI | 20% | Vue-shell issue assigned; repo instructions added. | Wait for Copilot PR; add mock NLBoot evidence dashboard if idle. |
-| Homebrew packaging | 28% | Formula task assigned; NLBoot formula template exists in nlboot repo. | Wait for Copilot PR; align formula with release artifact names after release. |
-| Agent dispatch operations | 65% | Dossier added to agent-registry; active issues assigned to Copilot; Codex/Copilot comments posted. | Continue PR sweep, review/merge loop, and close completed issues. |
-| M2 platform proof | 38% | M2 adapter dry-run evidence path exists; actual Apple Silicon packaging/entry handling still pending. | Add SourceOS Recovery/Installer packaging spec and Asahi-compatible task packet. |
+| SourceOS devtools | 46% | Repo bootstrapped; `sourceosctl` scaffold PR #2 exists, scoped, but draft with workflow `action_required`. | Wait for Copilot to mark ready and rerun checks; review/merge when green. |
+| SourceOS spec schemas | 58% | NLBoot object schemas PR #69 merged; issue #68 closed. Canonical contracts now exist for current slice. | Use schemas downstream in boot/devtools/web; add ReleaseSet/Fingerprint/TokenDoor next. |
+| SourceOS boot integration | 56% | NLBoot integration docs/fixtures/validation/maturity PR #12 merged; issue #11 closed. | Add platform adapter specs and align to sourceos-spec schemas. |
+| SocioProphet Web evidence UI | 34% | NLBoot evidence dashboard PR #21 exists but needs lockfile churn fixed before merge. | Wait for Copilot fix; re-review after lockfiles are reverted. |
+| Homebrew packaging | 34% | NLBoot formula/update PR #8 exists but needs rebase and template-vs-active-formula correction. | Wait for Copilot fix; active formula must not contain placeholder SHA values. |
+| Agent dispatch operations | 78% | Dossier added, instructions in active repos, Copilot assignment working, PR review/merge loop active. | Continue PR sweep, merge clean PRs, request fixes on unsafe scope. |
+| M2 platform proof | 40% | M2 adapter dry-run evidence path exists; sourceos-spec now has Apple Silicon adapter evidence schema. | Add SourceOS Recovery/Installer packaging spec and Asahi-compatible implementation task. |
 
-## Active issue queue
+## Active issue and PR queue
 
-| Repo | Issue | State | Owner signal | Next action |
-| --- | ---: | --- | --- | --- |
-| `SourceOS-Linux/sourceos-devtools` | #1 | assigned | Copilot + Codex comments | Wait for PR; reinforce if idle. |
-| `SourceOS-Linux/sourceos-boot` | #11 | assigned | Copilot + Codex comments | Wait for PR; reinforce if idle. |
-| `SourceOS-Linux/sourceos-spec` | #68 | assigned | Copilot + Codex comments | Wait for PR; reinforce if idle. |
-| `mdheller/socioprophet-web` | #20 | assigned | Copilot + Codex comments | Wait for PR; reinforce if idle. |
-| `SocioProphet/homebrew-prophet` | #6 | assigned | Copilot + Codex comments | Wait for PR; reinforce if idle. |
+| Repo | Issue | PR | State | Owner signal | Next action |
+| --- | ---: | ---: | --- | --- | --- |
+| `SourceOS-Linux/sourceos-devtools` | #1 | #2 | draft / action_required | Copilot | mark ready, refresh checks, then review/merge. |
+| `SourceOS-Linux/sourceos-boot` | #11 | #12 | merged / closed | Copilot | complete for current slice. |
+| `SourceOS-Linux/sourceos-spec` | #68 | #69 | merged / closed | Copilot | complete for current slice. |
+| `mdheller/socioprophet-web` | #20 | #21 | needs_fix | Copilot | revert unrelated lockfile churn and rerun validation. |
+| `SocioProphet/homebrew-prophet` | #6 | #8 | needs_fix / not mergeable | Copilot | rebase and move placeholder formula to template or wait for real release hashes. |
 
 ## Completed administrative items
 
@@ -40,6 +40,8 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 - Standard `AGENTS.md` and `.github/copilot-instructions.md` added to active repos.
 - NLBoot dry-run operator quickstart added.
 - Agent dispatch and merge operations dossier added to `SocioProphet/agent-registry`.
+- `SourceOS-Linux/sourceos-boot#12` merged and `#11` closed.
+- `SourceOS-Linux/sourceos-spec#69` merged and `#68` closed.
 
 ## Percentage policy
 
