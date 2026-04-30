@@ -1,0 +1,30 @@
+name: release-dry-run
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate examples
+        run: make validate
+      - name: Release dry-run
+        run: make release-dry-run
+      - name: Verify checksum
+        run: |
+          cd dist
+          sha256sum -c *.sha256
+      - name: Upload dry-run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dry-run
+          path: dist/
