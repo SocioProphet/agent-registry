@@ -17,11 +17,11 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | NLBoot usable MVP | 88% | Rust planner, signature verification, artifact fetch/cache/evidence, Linux dry-run proof, final handoff gate, M2 adapter dry-run, Cargo.lock committed, release-candidate workflow proven twice, SBOM helper added, SBOM-enabled RC workflow proven, RC artifact uploaded with SBOM path, operator-test release notes drafted. | Cut first operator-test tag only after final release-note review and downstream release decision. |
 | SourceOS devtools | 80% | `sourceosctl` read-only/dry-run scaffold merged; schema-backed NLBoot evidence validation merged; release archive inspection PR #7 merged and issue #6 closed. | Add package/install surface or wait for real NLBoot tag to verify release artifact inspection against real archive. |
 | SourceOS spec schemas | 70% | NLBoot schemas plus ReleaseSet/Fingerprint/ConfigSource/TokenDoor/GitRefBuild schemas merged; issues #68 and #72 closed. | Use schemas downstream in devtools/web/boot; add negative examples and conformance matrices later. |
-| SourceOS boot integration | 74% | NLBoot integration and M2 packaging specs merged; AppleSiliconAdapterEvidence normalization merged. | Move to Recovery/Installer artifact build lane and platform-entry descriptor adapter task. |
+| SourceOS boot integration | 76% | NLBoot integration, M2 packaging specs, and AppleSiliconAdapterEvidence normalization merged; Recovery/Installer artifact build lane issue #18 created and assigned. | Wait for PR on #18; review artifact-build lane docs/fixtures/validation. |
 | SocioProphet Web evidence UI | 60% | NLBoot evidence dashboard PR #21 merged and issue #20 closed after product-build passed. | Add schema-backed fixtures/API integration later; current mock dashboard slice complete. |
 | Homebrew packaging | 65% | NLBoot release-template workflow merged; formula-generation handoff PR #10 merged and issue #9 closed. No active formula with fake hashes. | Publish real formula only after NLBoot tag exists and real release URLs/SHA-256 values are available. |
-| Agent dispatch operations | 94% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, duplicate draft PRs cleaned up, SBOM proof PR #9 merged. | Continue PR sweep, merge clean PRs, update ledger each turn. |
-| M2 platform proof | 66% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 normal and Recovery/Installer packaging spec and normalization design/fixtures merged. | Move to Recovery/Installer artifact build lane and platform-entry descriptor implementation planning. |
+| Agent dispatch operations | 95% | Dossier added, repo instructions in place, Copilot assignment working, PR creation/review/merge loop active, duplicate draft PRs cleaned up, SBOM proof PR #9 merged, new Recovery/Installer artifact-build issue dispatched. | Continue PR sweep, merge clean PRs, update ledger each turn. |
+| M2 platform proof | 68% | M2 adapter dry-run evidence path exists; sourceos-spec has Apple Silicon adapter evidence schema; M2 normal and Recovery/Installer packaging spec and normalization design/fixtures merged; artifact-build lane issue #18 active. | Merge Recovery/Installer artifact-build lane, then move to platform-entry descriptor implementation planning. |
 
 ## Active issue and PR queue
 
@@ -33,6 +33,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 | `SourceOS-Linux/sourceos-boot` | #11 | #12 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #13 | #14 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-boot` | #15 | #17 | merged / closed | Copilot + ChatGPT replacement PR | complete for current slice. |
+| `SourceOS-Linux/sourceos-boot` | #18 | — | assigned / dispatched | Copilot + Codex comments | wait for PR; reinforce if idle. |
 | `SourceOS-Linux/sourceos-spec` | #68 | #69 | merged / closed | Copilot | complete for current slice. |
 | `SourceOS-Linux/sourceos-spec` | #72 | #73 | merged / closed | Copilot | complete for current slice. |
 | `mdheller/socioprophet-web` | #20 | #21 | merged / closed | Copilot | complete for current slice. |
@@ -64,6 +65,7 @@ Goal: prove a local-first SourceOS/NLBoot lifecycle path on the M2 demo surface 
 - `SourceOS-Linux/sourceos-boot#17` merged and `#15` closed; superseded draft `#16` closed.
 - `SourceOS-Linux/sourceos-devtools#7` merged and `#6` closed for read-only NLBoot release archive inspection.
 - `SocioProphet/homebrew-prophet#10` merged and `#9` closed for first-release formula-generation handoff.
+- `SourceOS-Linux/sourceos-boot#18` created/dispatched for Recovery/Installer artifact build lane.
 
 ## Percentage policy
 
