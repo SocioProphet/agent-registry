@@ -1,0 +1,40 @@
+{
+  "grantId": "urn:srcos:agent-grant:ops-history-browser-demo",
+  "specVersion": "0.1.0",
+  "agentId": "urn:srcos:agent:browser-automation-demo",
+  "grantFamily": "ops_history",
+  "allowedEventClasses": [
+    "browser.navigation",
+    "browser.capture",
+    "browser.download",
+    "browser.automation",
+    "artifact.reference"
+  ],
+  "allowedPayloadModes": [
+    "metadata-only",
+    "summary",
+    "ref-only"
+  ],
+  "scope": {
+    "workroomRef": "urn:srcos:workroom:professional-intelligence-demo",
+    "profileRef": "urn:srcos:profile:agent-runtime"
+  },
+  "endpointNames": [
+    "org.sourceos.BearHistory",
+    "org.sourceos.BearHistory.Export"
+  ],
+  "constraints": {
+    "humanBrowserProfileAllowed": false,
+    "credentialMaterialAllowed": false,
+    "cookieMaterialAllowed": false,
+    "contentPayloadAllowed": false,
+    "dryRunOnly": true
+  },
+  "policyDecisionRefs": [
+    "urn:srcos:policy-decision:ops-history-browser-event-export-demo-0001"
+  ],
+  "evidenceRefs": [
+    "urn:srcos:evidence:ops-history-browser-grant-demo-0001"
+  ],
+  "expiresAt": "2026-12-31T23:59:59Z"
+}
