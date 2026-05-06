@@ -1,0 +1,72 @@
+{
+  "repo": "SocioProphet/agent-registry",
+  "domain": "agent",
+  "specVersion": "0.1.0",
+  "ownedSchemas": [
+    "AgentManifest",
+    "AgentCapabilityLease",
+    "AgentTrustTier",
+    "AgentToolGrant"
+  ],
+  "syncEngines": [
+    {
+      "engineId": "sourceos.sync.agent-registry",
+      "collection": "agents",
+      "schemaVersion": "0.1.0",
+      "ownerRepo": "SocioProphet/agent-registry",
+      "defaultEnabled": true,
+      "policyClass": "critical",
+      "encryptionScope": "workspace",
+      "mergeStrategy": "signed_authority_required",
+      "supportsTombstones": true,
+      "supportsRollback": true,
+      "supportsExport": true,
+      "dangerousFields": [
+        "capabilities",
+        "toolGrants",
+        "memoryScopes",
+        "modelProviders",
+        "runtimeProfiles",
+        "trustTier"
+      ],
+      "auditEvents": [
+        "agent.manifest.updated",
+        "agent.lease.granted",
+        "agent.lease.revoked",
+        "agent.trust_tier.updated",
+        "agent.tool.enable.denied"
+      ]
+    }
+  ],
+  "sourceChannels": [
+    "agent.discover",
+    "agent.lease.grant",
+    "agent.lease.revoke",
+    "agent.manifest.verify"
+  ],
+  "policyClasses": [
+    "critical"
+  ],
+  "auditEvents": [
+    "agent.manifest.updated",
+    "agent.lease.granted",
+    "agent.lease.revoked",
+    "agent.trust_tier.updated",
+    "agent.tool.enable.denied"
+  ],
+  "dangerousSurfaces": [
+    "agent.manifest.update",
+    "agent.trust_tier.update",
+    "agent.lease.grant",
+    "agent.lease.revoke",
+    "agent.tool.enable",
+    "agent.memory_scope.grant",
+    "agent.model_provider.enable"
+  ],
+  "authorityRepos": [
+    "SourceOS-Linux/sourceos-spec",
+    "SocioProphet/policy-fabric",
+    "SocioProphet/guardrail-fabric"
+  ],
+  "notes": "Governed authority for signed agent manifests, trust tiers, scoped tool grants, and revocable capability leases."
+}
