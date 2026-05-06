@@ -1,0 +1,47 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentOperationScope",
+    "metadata": {
+      "scopeId": "scope://workspace-operations/ws-ops-executor/default",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "allowedOperationTypes": [
+        "WorkspaceOperation",
+        "OperationTask",
+        "ToolGrant"
+      ],
+      "allowedArtifactTypes": [
+        "Artifact",
+        "DecisionCard"
+      ],
+      "policyProfile": "policy://workspace-operations/executor-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-scope"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentOperationScope",
+    "metadata": {
+      "scopeId": "scope://workspace-operations/ws-ops-reviewer/default",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "allowedOperationTypes": [
+        "WorkspaceOperation",
+        "DecisionCard",
+        "PolicyGateRecord"
+      ],
+      "allowedArtifactTypes": [
+        "Artifact",
+        "DecisionCard",
+        "PolicyGateRecord"
+      ],
+      "policyProfile": "policy://workspace-operations/reviewer-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-scope"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentBudgetPolicy",
+    "metadata": {
+      "policyId": "budget://workspace-operations/ws-ops-executor/default",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "defaultBudget": {
+        "maxTokensPerOperation": 32000,
+        "maxOperationsPerSession": 50,
+        "maxArtifactsPerOperation": 10
+      },
+      "maxConcurrency": 3,
+      "policyProfile": "policy://workspace-operations/executor-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-budget"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentBudgetPolicy",
+    "metadata": {
+      "policyId": "budget://workspace-operations/ws-ops-reviewer/default",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "defaultBudget": {
+        "maxTokensPerOperation": 16000,
+        "maxOperationsPerSession": 20,
+        "maxArtifactsPerOperation": 5
+      },
+      "maxConcurrency": 1,
+      "policyProfile": "policy://workspace-operations/reviewer-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-budget"
+    }
+  }
+]
