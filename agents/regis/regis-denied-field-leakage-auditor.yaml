@@ -1,0 +1,27 @@
+agent_id: regis-denied-field-leakage-auditor
+version: 0.1.0
+owner_repo: SocioProphet/prophet-platform
+purpose: Ensure no denied field value or inference leaks into features, embeddings, or carriers.
+authority_band: observe
+allowed_input_contracts:
+  - TwinProjectionFeature
+  - EmbeddingCard
+allowed_output_contracts:
+  - PolicyGateResult
+permitted_actions:
+  - inspect_projection_feature_fields
+  - inspect_embedding_card_fields
+  - emit_gate_result
+prohibited_actions:
+  - reveal_denied_field_value
+  - bypass_audit
+  - promote_denied_field
+required_policy_gates:
+  - denied-field-leakage-gate
+audit_obligations:
+  - record_checked_fields
+  - record_gate_outcome
+revocation_behavior: none
+failure_classification:
+  - denied_field_detected_in_payload
+human_review_required: true
