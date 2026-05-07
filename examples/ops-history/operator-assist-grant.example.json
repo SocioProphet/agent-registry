@@ -1,0 +1,39 @@
+{
+  "grantId": "urn:srcos:agent-grant:ops-history-operator-assist-demo",
+  "specVersion": "0.1.0",
+  "agentId": "urn:srcos:agent:operator-assist-demo",
+  "grantFamily": "ops_history",
+  "allowedEventClasses": [
+    "shell.receipt",
+    "policy.decision",
+    "agentplane.run",
+    "agentplane.replay",
+    "artifact.reference"
+  ],
+  "allowedPayloadModes": [
+    "metadata-only",
+    "summary",
+    "ref-only"
+  ],
+  "scope": {
+    "workroomRef": "urn:srcos:workroom:professional-intelligence-demo",
+    "sessionRef": "urn:srcos:shell-session:demo-0001"
+  },
+  "endpointNames": [
+    "org.sourceos.OpsHistory",
+    "org.sourceos.OpsHistory.ContextPack"
+  ],
+  "constraints": {
+    "humanBrowserProfileAllowed": false,
+    "contentPayloadAllowed": false,
+    "memoryWritebackAllowed": false,
+    "dryRunOnly": true
+  },
+  "policyDecisionRefs": [
+    "urn:srcos:policy-decision:ops-history-receipt-event-export-demo-0001"
+  ],
+  "evidenceRefs": [
+    "urn:srcos:evidence:ops-history-operator-assist-grant-demo-0001"
+  ],
+  "expiresAt": "2026-12-31T23:59:59Z"
+}
