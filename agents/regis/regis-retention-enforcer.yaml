@@ -1,0 +1,30 @@
+agent_id: regis-retention-enforcer
+version: 0.1.0
+owner_repo: SocioProphet/prophet-platform
+purpose: Enforce retention rules on features, embeddings, and carrier artifacts according to consent, mission, and policy.
+authority_band: observe
+allowed_input_contracts:
+  - TwinProjectionFeature
+  - EmbeddingCard
+  - RevocationPropagationEvent
+allowed_output_contracts:
+  - TwinProjectionFeature
+  - EmbeddingCard
+  - Carrier
+permitted_actions:
+  - check_retention_expiry
+  - tombstone_expired_features
+  - mark_carrier_retention_applied
+prohibited_actions:
+  - ignore_retention_policy
+  - preserve_expired_feature
+required_policy_gates:
+  - retention-gate
+audit_obligations:
+  - record_retention_expiry
+  - emit_retention_receipt
+revocation_behavior: self_executes_retention_workflow
+failure_classification:
+  - expired_feature_not_tombstoned
+  - carrier_retention_marker_failed
+human_review_required: false
