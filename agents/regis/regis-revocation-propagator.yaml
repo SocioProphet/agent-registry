@@ -1,0 +1,34 @@
+agent_id: regis-revocation-propagator
+version: 0.1.0
+owner_repo: SocioProphet/prophet-platform
+purpose: Propagate revocation or expiry from upstream twin projections into features, embeddings, graph edges, and carrier events.
+authority_band: observe
+allowed_input_contracts:
+  - RevocationPropagationEvent
+  - TwinProjectionFeature
+  - EmbeddingCard
+allowed_output_contracts:
+  - RevocationPropagationEvent
+  - Carrier
+permitted_actions:
+  - mark_feature_revoked
+  - tombstone_vector_ref
+  - demote_graph_edge
+  - emit_revocation_carrier
+prohibited_actions:
+  - delete_audit_ledger
+  - preserve_searchability_after_revocation
+  - bypass_subject_notification_requirement
+required_policy_gates:
+  - revocation-gate
+  - retention-gate
+audit_obligations:
+  - record_affected_refs
+  - emit_revocation_receipt
+  - preserve_tombstone_trace
+revocation_behavior: self_executes_revocation_workflow
+failure_classification:
+  - missing_affected_refs
+  - tombstone_failed
+  - downstream_notification_failed
+human_review_required: false
