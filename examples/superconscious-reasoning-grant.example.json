@@ -1,0 +1,56 @@
+{
+  "apiVersion": "agentregistry.socioprophet.dev/v1",
+  "kind": "SuperconsciousReasoningGrant",
+  "metadata": {
+    "grantId": "urn:socioprophet:agent-grant:superconscious-m1-deterministic",
+    "createdAt": "2026-05-06T00:00:00Z"
+  },
+  "spec": {
+    "reasoningRunRef": "urn:srcos:reasoning-run:superconscious-demo",
+    "agentId": "urn:socioprophet:agent:superconscious-demo",
+    "agentRole": "reference-loop-demo",
+    "sessionRef": "urn:srcos:session:superconscious-m1-deterministic",
+    "workspaceRef": "urn:socioprophet:workspace:superconscious-m1",
+    "status": "active",
+    "toolGrants": [
+      {
+        "toolRef": "urn:socioprophet:tool:mock-summarizer",
+        "scope": "readonly-mock",
+        "sideEffects": "none",
+        "network": "none"
+      }
+    ],
+    "skillGrants": [
+      {
+        "skillRef": "urn:socioprophet:skill:superconscious-basic-planner",
+        "scope": "deterministic-local"
+      }
+    ],
+    "modelGrants": [
+      {
+        "routeRef": "urn:srcos:model-route:deterministic-stub",
+        "providerClass": "none",
+        "modelCalls": "none",
+        "promptEgress": "denied"
+      }
+    ],
+    "memoryGrants": [
+      {
+        "memoryScope": "proposal-only",
+        "durableWrite": false
+      }
+    ],
+    "constraints": [
+      "evidence-required",
+      "safe-operational-trace-only",
+      "no-network-egress",
+      "no-host-state-change",
+      "no-model-provider-call"
+    ],
+    "revocation": {
+      "status": "not-revoked",
+      "revocationRef": "urn:socioprophet:revocation:superconscious-m1-none"
+    },
+    "evidenceRef": "urn:srcos:reasoning-event:superconscious-grant-resolved"
+  }
+}
