@@ -1,0 +1,11 @@
+{
+  "agent_id": "acr-concordance-agent",
+  "version": "0.1.0",
+  "role": "golden_record_concordance_submission",
+  "inputs": ["SourceRecord", "ConcordanceLink", "CanonicalEntity"],
+  "outputs": ["ConcordanceDecisionCertificate"],
+  "policy_scopes": ["acr.survivorship.core@0.1.0"],
+  "graph_permissions": ["read:source_record", "read:canonical_entity", "read:concordance_link"],
+  "search_permissions": [],
+  "evidence_outputs": ["ledger_pointer", "certificate_pointer"]
+}

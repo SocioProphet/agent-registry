@@ -1,0 +1,11 @@
+{
+  "agent_id": "sherlock-index-agent",
+  "version": "0.1.0",
+  "role": "pointer_backed_evidence_indexing",
+  "inputs": ["InvestigationCase", "MeshRushSimulationTrace", "ProofCertificate"],
+  "outputs": ["SearchIndexRecord"],
+  "policy_scopes": ["regis.search.evidence_pointer.core@0.1.0"],
+  "graph_permissions": [],
+  "search_permissions": ["write:search_index_record", "read:search_query_result"],
+  "evidence_outputs": ["ledger_pointer", "certificate_pointer", "trace_pointer"]
+}
