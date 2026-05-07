@@ -1,0 +1,11 @@
+{
+  "agent_id": "regis-proof-agent",
+  "version": "0.1.0",
+  "role": "proof_generation",
+  "inputs": ["IdentityState", "ConcordanceLink", "CanonicalEntity"],
+  "outputs": ["ProofCertificate"],
+  "policy_scopes": ["regis.identity.polytope.core@0.1.0"],
+  "graph_permissions": ["read:identity_state", "read:concordance_link"],
+  "search_permissions": [],
+  "evidence_outputs": ["ledger_pointer", "certificate_pointer"]
+}
