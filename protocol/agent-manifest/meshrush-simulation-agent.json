@@ -1,0 +1,11 @@
+{
+  "agent_id": "meshrush-simulation-agent",
+  "version": "0.1.0",
+  "role": "graph_exploration",
+  "inputs": ["IdentityState", "TokenLane", "ProofCertificate"],
+  "outputs": ["MeshRushSimulationTrace"],
+  "policy_scopes": ["regis.transition.admissibility.core@0.1.0"],
+  "graph_permissions": ["read:identity_state", "read:token_lane"],
+  "search_permissions": [],
+  "evidence_outputs": ["trace_pointer"]
+}
