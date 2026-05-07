@@ -1,0 +1,11 @@
+{
+  "agent_id": "holmes-case-agent",
+  "version": "0.1.0",
+  "role": "investigation_case_reasoning",
+  "inputs": ["MeshRushSimulationTrace", "IdentityState", "ProofCertificate"],
+  "outputs": ["InvestigationCase"],
+  "policy_scopes": ["regis.transition.admissibility.core@0.1.0"],
+  "graph_permissions": ["read:identity_state", "read:mesh_rush_trace"],
+  "search_permissions": [],
+  "evidence_outputs": ["ledger_pointer", "certificate_pointer", "trace_pointer"]
+}
