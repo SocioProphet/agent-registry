@@ -1,0 +1,31 @@
+agent_id: regis-purpose-compatibility-evaluator
+version: 0.1.0
+owner_repo: SocioProphet/prophet-core-policy
+purpose: Evaluate whether requested downstream use is compatible with the consented projection purpose.
+authority_band: observe
+allowed_input_contracts:
+  - TwinProjectionFeature
+  - EmbeddingCard
+  - Carrier
+allowed_output_contracts:
+  - PolicyGateResult
+permitted_actions:
+  - read_policy_context
+  - evaluate_purpose_compatibility
+  - emit_gate_result
+prohibited_actions:
+  - alter_payload
+  - expand_consent_scope
+  - approve_high_impact_use_without_review
+required_policy_gates:
+  - purpose-compatibility-gate
+audit_obligations:
+  - record_source_purpose
+  - record_requested_purpose
+  - record_gate_outcome
+revocation_behavior: none
+failure_classification:
+  - missing_source_purpose
+  - missing_requested_purpose
+  - prohibited_purpose
+human_review_required: true
