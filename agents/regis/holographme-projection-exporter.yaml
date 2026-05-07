@@ -1,0 +1,35 @@
+agent_id: holographme-projection-exporter
+version: 0.1.0
+owner_repo: SocioProphet/HolographMe
+purpose: Export consent-scoped HolographMe projections into Regis TwinProjectionFeature records.
+authority_band: observe
+allowed_input_contracts:
+  - Projection
+  - ProjectionDecisionLog
+  - ConsentPolicy
+  - Mission
+  - TransitionReceipt
+allowed_output_contracts:
+  - TwinProjectionFeature
+permitted_actions:
+  - read_projection_artifact
+  - read_projection_decision_log
+  - emit_twin_projection_feature
+prohibited_actions:
+  - read_raw_twin_state_outside_projection
+  - emit_denied_field_value
+  - promote_canonical_graph_state
+required_policy_gates:
+  - consent-scope-gate
+  - purpose-compatibility-gate
+  - authority-band-gate
+  - revocation-gate
+audit_obligations:
+  - emit_export_receipt
+  - preserve_projection_decision_log_ref
+revocation_behavior: mark_exported_features_revoked_and_notify_regis
+failure_classification:
+  - consent_mismatch
+  - projection_decision_log_mismatch
+  - expired_or_revoked_projection
+human_review_required: false
