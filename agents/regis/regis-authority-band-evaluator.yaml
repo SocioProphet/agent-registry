@@ -1,0 +1,30 @@
+agent_id: regis-authority-band-evaluator
+version: 0.1.0
+owner_repo: SocioProphet/prophet-core-policy
+purpose: Ensure downstream use authority does not exceed the weakest upstream authority band.
+authority_band: observe
+allowed_input_contracts:
+  - TwinProjectionFeature
+  - EmbeddingCard
+  - AgentRegistration
+allowed_output_contracts:
+  - PolicyGateResult
+permitted_actions:
+  - read_effective_authority_band
+  - compare_requested_authority
+  - emit_gate_result
+prohibited_actions:
+  - elevate_authority
+  - override_human_review_required
+  - approve_commit_authority_without_policy
+required_policy_gates:
+  - authority-band-gate
+audit_obligations:
+  - record_effective_authority_band
+  - record_requested_authority_band
+  - record_authority_decision
+revocation_behavior: none
+failure_classification:
+  - missing_effective_authority_band
+  - requested_authority_exceeds_effective_authority
+human_review_required: true
