@@ -1,0 +1,31 @@
+agent_id: regis-embedding-card-writer
+version: 0.1.0
+owner_repo: SocioProphet/prophet-platform
+purpose: Create governed EmbeddingCard records for Regis feature embeddings without inlining raw vectors unless policy explicitly allows it.
+authority_band: observe
+allowed_input_contracts:
+  - FeatureAssertion
+allowed_output_contracts:
+  - EmbeddingCard
+permitted_actions:
+  - read_feature_assertion
+  - create_embedding_card
+  - reference_vector_storage
+prohibited_actions:
+  - inline_raw_vector_without_policy
+  - bypass_embedding_card
+  - promote_canonical_graph_state
+required_policy_gates:
+  - consent-scope-gate
+  - domain-transfer-gate
+  - revocation-gate
+audit_obligations:
+  - preserve_feature_assertion_refs
+  - preserve_evidence_refs
+  - emit_embedding_card_receipt
+revocation_behavior: tombstone_embedding_cards_derived_from_revoked_features
+failure_classification:
+  - missing_feature_assertion_ref
+  - missing_policy_context
+  - blocked_revocation_state
+human_review_required: false
