@@ -1,0 +1,27 @@
+agent_id: regis-feature-assertion-builder
+version: 0.1.0
+owner_repo: SocioProphet/prophet-platform
+purpose: Convert TwinProjectionFeature records into normalized FeatureAssertion records for Regis graph use.
+authority_band: observe
+allowed_input_contracts:
+  - TwinProjectionFeature
+allowed_output_contracts:
+  - FeatureAssertion
+permitted_actions:
+  - read_twin_projection_feature
+  - emit_feature_assertion
+prohibited_actions:
+  - read_raw_twin_state
+  - bypass_consent_scope
+required_policy_gates:
+  - consent-scope-gate
+  - revocation-gate
+audit_obligations:
+  - preserve_feature_lineage
+  - preserve_projection_ref
+revocation_behavior: retract_feature_assertions_derived_from_revoked_features
+failure_classification:
+  - invalid_feature_contract
+  - missing_projection_lineage
+  - blocked_policy_state
+human_review_required: false
