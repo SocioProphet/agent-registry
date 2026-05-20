@@ -1,0 +1,97 @@
+{
+  "agent_id": "noetica",
+  "display_name": "Noetica",
+  "version": "m2a-registry-stub",
+  "authority_repo": "SocioProphet/Noetica",
+  "agent_class": "surface",
+  "trust_level": "surface",
+  "admission_status": "registry-stub",
+  "production_admitted": false,
+  "standalone_mode": true,
+  "sourceos_mode": false,
+  "description": "Governed chat surface for SocioProphet / SourceOS. This stub declares Noetica as a registry-visible surface agent without admitting production runtime authority.",
+  "modes": {
+    "standalone": {
+      "available": true,
+      "credential_source": "runtime-environment",
+      "registry_grants_enforced": false,
+      "notes": "Standalone mode may use local runtime environment variables. The registry does not store credentials."
+    },
+    "sourceos": {
+      "available": false,
+      "credential_source": "agent-registry-tool-grant-resolution-pending",
+      "registry_grants_enforced": true,
+      "notes": "SourceOS mode must resolve provider and steering grants through agent-registry before production admission."
+    }
+  },
+  "tool_grants_required": [
+    {
+      "grant_id": "call:anthropic",
+      "grant_status": "not-admitted",
+      "capability": "external-model-provider-route",
+      "credential_stored_here": false,
+      "evidence_required": "ExternalModelProviderRouteEvidence"
+    },
+    {
+      "grant_id": "call:openai",
+      "grant_status": "not-admitted",
+      "capability": "external-model-provider-route",
+      "credential_stored_here": false,
+      "evidence_required": "ExternalModelProviderRouteEvidence"
+    },
+    {
+      "grant_id": "call:neuronpedia:steer",
+      "grant_status": "not-admitted",
+      "capability": "sae-steering-provider-route",
+      "credential_stored_here": false,
+      "evidence_required": "ExternalModelProviderRouteEvidence"
+    }
+  ],
+  "authority_boundaries": {
+    "owns": [
+      "chat-surface",
+      "steering-ux",
+      "governance-trail-display",
+      "provider-abstraction-view"
+    ],
+    "does_not_own": [
+      "memory-persistence",
+      "model-routing-authority",
+      "policy-admission-authority",
+      "tool-grant-admission",
+      "credential-storage"
+    ],
+    "delegated_authorities": {
+      "memory": "SocioProphet/memory-mesh",
+      "model_routing": "SocioProphet/model-router",
+      "policy_admission": "SocioProphet/guardrail-fabric",
+      "tool_grants": "SocioProphet/agent-registry",
+      "route_evidence": "SocioProphet/agentplane"
+    }
+  },
+  "evidence_boundaries": {
+    "standalone_current": [
+      "request_hash",
+      "evidence_hash",
+      "provider_route_evidence"
+    ],
+    "sourceos_future": [
+      "agent-registry-grant-ref",
+      "agentplane-route-evidence-ref",
+      "superconscious-run-ref"
+    ],
+    "credential_material_allowed": false,
+    "prompt_or_completion_storage_required": false
+  },
+  "revocation": {
+    "revocable": true,
+    "revocation_record_required": true,
+    "revocation_authority": "SocioProphet/agent-registry"
+  },
+  "non_claims": [
+    "This stub is not production admission.",
+    "This stub does not grant live provider access.",
+    "This stub does not store credentials or secrets.",
+    "This stub does not admit sessions, memories, or runtime tool grants."
+  ]
+}
