@@ -1,0 +1,36 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentRevocationRecord",
+    "metadata": {
+      "revocationId": "revocation://workspace-operations/ws-ops-executor/current",
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "createdAt": "2026-05-01T00:00:00Z"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "revocationState": "not-revoked",
+      "revokedOperationTypes": [],
+      "revokedTools": [],
+      "reasonCodes": ["active-authority"],
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-revocation"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentRevocationRecord",
+    "metadata": {
+      "revocationId": "revocation://workspace-operations/ws-ops-reviewer/current",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "createdAt": "2026-05-01T00:00:00Z"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "revocationState": "not-revoked",
+      "revokedOperationTypes": [],
+      "revokedTools": [],
+      "reasonCodes": ["active-authority"],
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-revocation"
+    }
+  }
+]

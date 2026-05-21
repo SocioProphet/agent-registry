@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/workspace-operations/records.v0.1.schema.json",
+  "title": "Agent Registry Workspace Operation Records v0.1",
+  "description": "Schema covering all agent registry record kinds required for Workspace Operation Plane integration.",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+    "kind": {
+      "type": "string",
+      "enum": [
+        "AgentRegistration",
+        "AgentCapabilityDeclaration",
+        "AgentOperationScope",
+        "AgentDelegationGrant",
+        "AgentToolGrant",
+        "AgentBudgetPolicy",
+        "AgentAuditProfile",
+        "AgentRevocationRecord",
+        "AgentOperationSessionBinding"
+      ]
+    },
+    "metadata": {"type": "object"},
+    "spec": {"type": "object"}
+  },
+  "$defs": {
+    "AgentRegistration": {
+      "description": "Root identity record for an agent in the Workspace Operation Plane.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentRegistration"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "agentKind", "version"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "agentKind": {"type": "string", "enum": ["codex", "copilot", "human", "local-cli", "system"]},
+            "version": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ownerRef", "policyProfile", "revocationState", "evidenceRef", "revocationRef"],
+          "properties": {
+            "ownerRef": {"type": "string"},
+            "policyProfile": {"type": "string"},
+            "revocationState": {"type": "string", "enum": ["active", "revoked", "suspended"]},
+            "evidenceRef": {"type": "string"},
+            "revocationRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentCapabilityDeclaration": {
+      "description": "Declares the operation types, tools, and artifact types an agent is permitted to use.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentCapabilityDeclaration"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["declarationId", "agentId"],
+          "properties": {
+            "declarationId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "allowedOperationTypes", "allowedTools", "allowedArtifactTypes", "policyProfile", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "allowedOperationTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "allowedTools": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "allowedArtifactTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "policyProfile": {"type": "string"},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentOperationScope": {
+      "description": "Constrains the set of operation types and artifact types an agent may act upon in a given scope.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentOperationScope"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scopeId", "agentId"],
+          "properties": {
+            "scopeId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "allowedOperationTypes", "allowedArtifactTypes", "policyProfile", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "allowedOperationTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "allowedArtifactTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "policyProfile": {"type": "string"},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentDelegationGrant": {
+      "description": "A scoped, expiring, revocable delegation of operation authority from one agent to another.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentDelegationGrant"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["grantId", "agentId"],
+          "properties": {
+            "grantId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "delegatedBy", "allowedOperationTypes", "allowedArtifactTypes", "policyProfile", "expiresAt", "revocationState", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "delegatedBy": {"type": "string"},
+            "allowedOperationTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "allowedArtifactTypes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "policyProfile": {"type": "string"},
+            "expiresAt": {"type": "string"},
+            "revocationState": {"type": "string", "enum": ["active", "revoked", "expired"]},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentToolGrant": {
+      "description": "Grants specific tools to an agent with scope constraints and an expiration.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentToolGrant"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["grantId", "agentId"],
+          "properties": {
+            "grantId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "allowedTools", "scope", "constraints", "expiresAt", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "allowedTools": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "scope": {"type": "string"},
+            "constraints": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "expiresAt": {"type": "string"},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentBudgetPolicy": {
+      "description": "Defines token, operation, and artifact budgets plus concurrency limits for an agent.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentBudgetPolicy"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["policyId", "agentId"],
+          "properties": {
+            "policyId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "defaultBudget", "maxConcurrency", "policyProfile", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "defaultBudget": {
+              "type": "object",
+              "required": ["maxTokensPerOperation", "maxOperationsPerSession", "maxArtifactsPerOperation"],
+              "properties": {
+                "maxTokensPerOperation": {"type": "integer", "minimum": 1},
+                "maxOperationsPerSession": {"type": "integer", "minimum": 1},
+                "maxArtifactsPerOperation": {"type": "integer", "minimum": 1}
+              }
+            },
+            "maxConcurrency": {"type": "integer", "minimum": 1},
+            "policyProfile": {"type": "string"},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentAuditProfile": {
+      "description": "Specifies the audit level and policy profile for an agent in the Workspace Operation Plane.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentAuditProfile"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["profileId", "agentId"],
+          "properties": {
+            "profileId": {"type": "string"},
+            "agentId": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "auditLevel", "policyProfile", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "auditLevel": {"type": "string", "enum": ["none", "summary", "standard", "full"]},
+            "policyProfile": {"type": "string"},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentRevocationRecord": {
+      "description": "Records the revocation state for a workspace-operations agent, including revoked operation types and tools.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentRevocationRecord"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["revocationId", "agentId", "createdAt"],
+          "properties": {
+            "revocationId": {"type": "string"},
+            "agentId": {"type": "string"},
+            "createdAt": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "revocationState", "revokedOperationTypes", "revokedTools", "reasonCodes", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "revocationState": {"type": "string", "enum": ["not-revoked", "revoked"]},
+            "revokedOperationTypes": {"type": "array", "items": {"type": "string"}},
+            "revokedTools": {"type": "array", "items": {"type": "string"}},
+            "reasonCodes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    },
+    "AgentOperationSessionBinding": {
+      "description": "Binds an active agent session to its operation scope, delegation grant, tool grants, budget, and audit profile.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {"const": "agentregistry.socioprophet.dev/v1"},
+        "kind": {"const": "AgentOperationSessionBinding"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sessionId", "agentId", "createdAt"],
+          "properties": {
+            "sessionId": {"type": "string"},
+            "agentId": {"type": "string"},
+            "createdAt": {"type": "string"}
+          }
+        },
+        "spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentId", "operationScopeRef", "toolGrantRefs", "budgetPolicyRef", "auditProfileRef", "status", "evidenceRef"],
+          "properties": {
+            "agentId": {"type": "string"},
+            "operationScopeRef": {"type": "string"},
+            "delegationGrantRef": {"type": "string"},
+            "toolGrantRefs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "budgetPolicyRef": {"type": "string"},
+            "auditProfileRef": {"type": "string"},
+            "status": {"type": "string", "enum": ["active", "expired", "revoked"]},
+            "evidenceRef": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

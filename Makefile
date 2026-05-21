@@ -1,7 +1,10 @@
-.PHONY: validate test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops
 	python3 tools/validate_agent_registry_examples.py
+
+validate-workspace-ops:
+	python3 tools/validate_workspace_operation_records.py
 
 ops-history-grants-validate:
 	python3 tools/validate_ops_history_agent_grants.py

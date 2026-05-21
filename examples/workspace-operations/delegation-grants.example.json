@@ -1,0 +1,25 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentDelegationGrant",
+    "metadata": {
+      "grantId": "grant://workspace-operations/ws-ops-executor/delegated-from-reviewer",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "delegatedBy": "agent://workspace-operations/ws-ops-reviewer",
+      "allowedOperationTypes": [
+        "WorkspaceOperation",
+        "OperationTask"
+      ],
+      "allowedArtifactTypes": [
+        "Artifact"
+      ],
+      "policyProfile": "policy://workspace-operations/delegated-executor",
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "revocationState": "active",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/delegation-grant-001"
+    }
+  }
+]
