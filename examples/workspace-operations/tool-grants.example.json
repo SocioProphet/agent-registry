@@ -1,0 +1,52 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentToolGrant",
+    "metadata": {
+      "grantId": "grant://workspace-operations/ws-ops-executor/workspace-operation-create",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "allowedTools": [
+        "tool://agentplane/workspace-operation-create",
+        "tool://agentplane/operation-task-update",
+        "tool://agentplane/artifact-read"
+      ],
+      "scope": "create-update-read-only",
+      "constraints": [
+        "no-secret-access",
+        "no-memory-namespace-write",
+        "no-local-agent-machine-execution",
+        "evidence-required"
+      ],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-tool-grant"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentToolGrant",
+    "metadata": {
+      "grantId": "grant://workspace-operations/ws-ops-reviewer/decision-card-create",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "allowedTools": [
+        "tool://agentplane/workspace-operation-read",
+        "tool://agentplane/decision-card-create",
+        "tool://agentplane/policy-gate-evaluate"
+      ],
+      "scope": "read-evaluate-create-only",
+      "constraints": [
+        "no-secret-access",
+        "no-memory-namespace-write",
+        "no-local-agent-machine-execution",
+        "evidence-required"
+      ],
+      "expiresAt": "2026-12-31T23:59:59Z",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-tool-grant"
+    }
+  }
+]

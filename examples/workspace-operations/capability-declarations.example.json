@@ -1,0 +1,57 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentCapabilityDeclaration",
+    "metadata": {
+      "declarationId": "declaration://workspace-operations/ws-ops-executor/capabilities",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "allowedOperationTypes": [
+        "WorkspaceOperation",
+        "OperationTask",
+        "ToolGrant"
+      ],
+      "allowedTools": [
+        "tool://agentplane/workspace-operation-create",
+        "tool://agentplane/operation-task-update",
+        "tool://agentplane/artifact-read"
+      ],
+      "allowedArtifactTypes": [
+        "Artifact",
+        "DecisionCard"
+      ],
+      "policyProfile": "policy://workspace-operations/executor-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-capabilities"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentCapabilityDeclaration",
+    "metadata": {
+      "declarationId": "declaration://workspace-operations/ws-ops-reviewer/capabilities",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "allowedOperationTypes": [
+        "WorkspaceOperation",
+        "DecisionCard",
+        "PolicyGateRecord"
+      ],
+      "allowedTools": [
+        "tool://agentplane/workspace-operation-read",
+        "tool://agentplane/decision-card-create",
+        "tool://agentplane/policy-gate-evaluate"
+      ],
+      "allowedArtifactTypes": [
+        "Artifact",
+        "DecisionCard",
+        "PolicyGateRecord"
+      ],
+      "policyProfile": "policy://workspace-operations/reviewer-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-capabilities"
+    }
+  }
+]

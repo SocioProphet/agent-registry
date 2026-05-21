@@ -1,0 +1,30 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentAuditProfile",
+    "metadata": {
+      "profileId": "audit://workspace-operations/ws-ops-executor/default",
+      "agentId": "agent://workspace-operations/ws-ops-executor"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "auditLevel": "full",
+      "policyProfile": "policy://workspace-operations/executor-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-audit"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentAuditProfile",
+    "metadata": {
+      "profileId": "audit://workspace-operations/ws-ops-reviewer/default",
+      "agentId": "agent://workspace-operations/ws-ops-reviewer"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "auditLevel": "full",
+      "policyProfile": "policy://workspace-operations/reviewer-default",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-audit"
+    }
+  }
+]

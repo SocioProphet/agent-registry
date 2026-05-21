@@ -1,0 +1,34 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentRegistration",
+    "metadata": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "agentKind": "codex",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/agentplane",
+      "policyProfile": "policy://workspace-operations/executor-default",
+      "revocationState": "active",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-registration",
+      "revocationRef": "revocation://workspace-operations/ws-ops-executor/current"
+    }
+  },
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentRegistration",
+    "metadata": {
+      "agentId": "agent://workspace-operations/ws-ops-reviewer",
+      "agentKind": "copilot",
+      "version": "0.1.0"
+    },
+    "spec": {
+      "ownerRef": "team://socioprophet/agentplane",
+      "policyProfile": "policy://workspace-operations/reviewer-default",
+      "revocationState": "active",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-reviewer-registration",
+      "revocationRef": "revocation://workspace-operations/ws-ops-reviewer/current"
+    }
+  }
+]

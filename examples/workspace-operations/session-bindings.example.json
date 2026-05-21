@@ -1,0 +1,23 @@
+[
+  {
+    "apiVersion": "agentregistry.socioprophet.dev/v1",
+    "kind": "AgentOperationSessionBinding",
+    "metadata": {
+      "sessionId": "session://workspace-operations/ws-ops-executor/001",
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "createdAt": "2026-05-01T00:00:00Z"
+    },
+    "spec": {
+      "agentId": "agent://workspace-operations/ws-ops-executor",
+      "operationScopeRef": "scope://workspace-operations/ws-ops-executor/default",
+      "delegationGrantRef": "grant://workspace-operations/ws-ops-executor/delegated-from-reviewer",
+      "toolGrantRefs": [
+        "grant://workspace-operations/ws-ops-executor/workspace-operation-create"
+      ],
+      "budgetPolicyRef": "budget://workspace-operations/ws-ops-executor/default",
+      "auditProfileRef": "audit://workspace-operations/ws-ops-executor/default",
+      "status": "active",
+      "evidenceRef": "evidence://agent-registry/workspace-operations/ws-ops-executor-session-001"
+    }
+  }
+]
