@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "agent-registry.agent-authority-current-state.v0.1",
+  "recordType": "AgentAuthorityCurrentState",
+  "stateId": "agent-authority-current-state:agent-alpha:revoked",
+  "agentRef": "agent-registry://agent-alpha",
+  "computed_at": "2026-05-22T12:33:00Z",
+  "authority_status": "revoked",
+  "effective_decision_ref": "trustops-agent-authority-decision:agent-alpha-revoke-001",
+  "source_decision_refs": [
+    "trustops-agent-authority-decision:agent-alpha-revoke-001"
+  ],
+  "evidenceRefs": [
+    "trustops-receipt:agent-alpha-revoke-001",
+    "guardrail-action:agent-alpha-revoke-001",
+    "policy://trustops/agent-authority-v0.1"
+  ],
+  "authorityEffects": {
+    "toolAccess": "revoked",
+    "memoryAccess": "revoked",
+    "autonomousExecution": "revoked",
+    "routeEligibility": "revoked",
+    "egressMode": "blocked"
+  },
+  "restoration_required": true,
+  "restoration_policy_ref": "policy://trustops/agent-authority-restoration-v0.1",
+  "restoration_conditions": [
+    "new authority grant",
+    "fresh passing TrustOps receipt",
+    "human restoration approval",
+    "authorization evidence recorded"
+  ],
+  "receipt_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "labels": {
+    "fixture": "revoked"
+  }
+}
