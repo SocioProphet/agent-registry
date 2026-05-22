@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Validate TrustOps agent authority decision contracts.
-
-This validator is intentionally stdlib-only. It enforces the boundary that a
-TrustOps receipt is evidence while an agent authority change is a governed
-decision with an effective time and restoration policy.
-"""
+"""Validate TrustOps agent authority decision contracts."""
 
 from __future__ import annotations
 
@@ -17,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "contracts" / "trustops" / "agent-authority-decision.v0.1.schema.json"
 EXAMPLE = ROOT / "contracts" / "trustops" / "agent-authority-decision.v0.1.example.json"
 INVALID_PASS_REVOKED = ROOT / "contracts" / "trustops" / "agent-authority-decision.pass-revoked.invalid.json"
+INVALID_MISSING_AUTHORITY = ROOT / "contracts" / "trustops" / "agent-authority-decision.missing-decision-authority.invalid.json"
 
 REQUIRED_TOP_LEVEL = {
     "schemaVersion",
@@ -26,6 +22,11 @@ REQUIRED_TOP_LEVEL = {
     "receiptRef",
     "receipt_outcome",
     "authority_decision",
+    "decision_actor_ref",
+    "decision_actor_kind",
+    "decision_authority_ref",
+    "authorization_policy_ref",
+    "authorization_evidence_refs",
     "effective_at",
     "decision_timestamp",
     "policyRefs",
@@ -62,6 +63,8 @@ MAX_AUTHORITY_BY_RECEIPT = {
     "revoke": "revoked",
 }
 
+DECISION_ACTOR_KINDS = {"human", "policy-engine", "service", "governance-agent"}
+
 
 class ValidationError(Exception):
     pass
@@ -94,6 +97,9 @@ def require_non_empty_list(record: dict[str, Any], key: str) -> list[Any]:
     value = record.get(key)
     if not isinstance(value, list) or not value:
         fail(f"{key}: expected non-empty list")
+    for index, item in enumerate(value):
+        if not isinstance(item, str) or not item:
+            fail(f"{key}[{index}]: expected non-empty string")
     return value
 
 
@@ -111,6 +117,9 @@ def validate_schema(schema: dict[str, Any]) -> None:
         fail("schemaVersion const mismatch")
     if props.get("recordType", {}).get("const") != "TrustOpsAgentAuthorityDecision":
         fail("recordType const mismatch")
+    actor_kind_enum = set(props.get("decision_actor_kind", {}).get("enum", []))
+    if actor_kind_enum != DECISION_ACTOR_KINDS:
+        fail("decision_actor_kind enum mismatch")
 
 
 def validate_record(record: dict[str, Any]) -> None:
@@ -129,16 +138,20 @@ def validate_record(record: dict[str, Any]) -> None:
         "receiptRef",
         "receipt_outcome",
         "authority_decision",
+        "decision_actor_ref",
+        "decision_actor_kind",
+        "decision_authority_ref",
+        "authorization_policy_ref",
         "effective_at",
         "decision_timestamp",
     ):
         require_non_empty_string(record, key)
 
+    if record["decision_actor_kind"] not in DECISION_ACTOR_KINDS:
+        fail(f"unknown decision_actor_kind: {record['decision_actor_kind']}")
+
     for key in ("policyRefs", "gateRefs", "evidenceRefs"):
-        values = require_non_empty_list(record, key)
-        for index, value in enumerate(values):
-            if not isinstance(value, str) or not value:
-                fail(f"{key}[{index}]: expected non-empty string")
+        require_non_empty_list(record, key)
 
     receipt_outcome = record["receipt_outcome"]
     authority_decision = record["authority_decision"]
@@ -156,6 +169,9 @@ def validate_record(record: dict[str, Any]) -> None:
 
     if receipt_outcome in {"block", "rollback", "revoke"} and authority_decision == "unchanged":
         fail(f"{receipt_outcome} cannot leave authority unchanged")
+
+    if authority_decision != "unchanged":
+        require_non_empty_list(record, "authorization_evidence_refs")
 
     effects = record.get("authorityEffects")
     if not isinstance(effects, dict):
@@ -175,16 +191,20 @@ def validate_record(record: dict[str, Any]) -> None:
             fail("restored_by_policy.restoration_conditions required when restoration is allowed")
 
 
+def expect_invalid(path: Path, label: str) -> None:
+    try:
+        validate_record(load_json(path))
+    except ValidationError:
+        return
+    fail(f"invalid fixture unexpectedly validated: {label}")
+
+
 def main() -> int:
     try:
         validate_schema(load_json(SCHEMA))
         validate_record(load_json(EXAMPLE))
-        try:
-            validate_record(load_json(INVALID_PASS_REVOKED))
-        except ValidationError:
-            pass
-        else:
-            fail("invalid pass->revoked fixture unexpectedly validated")
+        expect_invalid(INVALID_PASS_REVOKED, "pass-revoked")
+        expect_invalid(INVALID_MISSING_AUTHORITY, "missing-decision-authority")
     except ValidationError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
