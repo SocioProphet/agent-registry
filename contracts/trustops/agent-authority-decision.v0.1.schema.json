@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/trustops/agent-authority-decision.v0.1.schema.json",
+  "title": "TrustOps Agent Authority Decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "recordId",
+    "agentRef",
+    "receiptRef",
+    "receipt_outcome",
+    "authority_decision",
+    "decision_actor_ref",
+    "decision_actor_kind",
+    "decision_authority_ref",
+    "authorization_policy_ref",
+    "authorization_evidence_refs",
+    "effective_at",
+    "decision_timestamp",
+    "policyRefs",
+    "gateRefs",
+    "evidenceRefs",
+    "authorityEffects",
+    "restored_by_policy"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "agent-registry.trustops-agent-authority-decision.v0.1"},
+    "recordType": {"const": "TrustOpsAgentAuthorityDecision"},
+    "recordId": {"type": "string"},
+    "agentRef": {"type": "string"},
+    "receiptRef": {"type": "string"},
+    "receipt_outcome": {
+      "type": "string",
+      "enum": ["pass", "warn", "require-review", "quarantine", "block", "rollback", "revoke"]
+    },
+    "authority_decision": {
+      "type": "string",
+      "enum": ["unchanged", "reduced", "suspended", "revoked"]
+    },
+    "decision_actor_ref": {"type": "string"},
+    "decision_actor_kind": {
+      "type": "string",
+      "enum": ["human", "policy-engine", "service", "governance-agent"]
+    },
+    "decision_authority_ref": {"type": "string"},
+    "authorization_policy_ref": {"type": "string"},
+    "authorization_evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "effective_at": {"type": "string"},
+    "decision_timestamp": {"type": "string"},
+    "restored_by_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "policyRef"],
+      "properties": {
+        "allowed": {"type": "boolean"},
+        "policyRef": {"type": "string"},
+        "restoration_conditions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "policyRefs": {"type": "array", "items": {"type": "string"}},
+    "gateRefs": {"type": "array", "items": {"type": "string"}},
+    "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+    "authorityEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toolAccess", "memoryAccess", "autonomousExecution", "routeEligibility", "egressMode"],
+      "properties": {
+        "toolAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "memoryAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "autonomousExecution": {"type": "string", "enum": ["unchanged", "require-human-approval", "suspended", "revoked"]},
+        "routeEligibility": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "egressMode": {"type": "string", "enum": ["unchanged", "restricted", "blocked"]}
+      }
+    },
+    "labels": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}

@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -11,6 +11,13 @@ ops-history-grants-validate:
 
 validate-superconscious-reasoning-grant:
 	python3 tools/validate_superconscious_reasoning_grant.py
+
+validate-trustops-agent-authority-decision:
+	python3 -m json.tool contracts/trustops/agent-authority-decision.v0.1.schema.json >/dev/null
+	python3 -m json.tool contracts/trustops/agent-authority-decision.v0.1.example.json >/dev/null
+	python3 -m json.tool contracts/trustops/agent-authority-decision.pass-revoked.invalid.json >/dev/null
+	python3 -m json.tool contracts/trustops/agent-authority-decision.missing-decision-authority.invalid.json >/dev/null
+	python3 tools/validate_trustops_agent_authority_decision.py
 
 test:
 	python3 -m pytest -q tools/tests
