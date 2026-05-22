@@ -12,6 +12,11 @@
     "receiptRef",
     "receipt_outcome",
     "authority_decision",
+    "decision_actor_ref",
+    "decision_actor_kind",
+    "decision_authority_ref",
+    "authorization_policy_ref",
+    "authorization_evidence_refs",
     "effective_at",
     "decision_timestamp",
     "policyRefs",
@@ -34,6 +39,14 @@
       "type": "string",
       "enum": ["unchanged", "reduced", "suspended", "revoked"]
     },
+    "decision_actor_ref": {"type": "string"},
+    "decision_actor_kind": {
+      "type": "string",
+      "enum": ["human", "policy-engine", "service", "governance-agent"]
+    },
+    "decision_authority_ref": {"type": "string"},
+    "authorization_policy_ref": {"type": "string"},
+    "authorization_evidence_refs": {"type": "array", "items": {"type": "string"}},
     "effective_at": {"type": "string"},
     "decision_timestamp": {"type": "string"},
     "restored_by_policy": {
