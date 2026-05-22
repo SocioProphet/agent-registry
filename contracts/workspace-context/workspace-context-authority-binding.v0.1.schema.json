@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/workspace-context/workspace-context-authority-binding.v0.1.schema.json",
+  "title": "WorkspaceContextAuthorityBinding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "bindingId",
+    "createdAt",
+    "workroomRef",
+    "contextGraphRef",
+    "runtimeBindingRef",
+    "agentRefs",
+    "sessionRefs",
+    "authorityStateRefs",
+    "grantRefs",
+    "policyRefs",
+    "evidenceRefs",
+    "status"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "agent-registry.workspace-context-authority-binding.v0.1" },
+    "recordType": { "const": "WorkspaceContextAuthorityBinding" },
+    "bindingId": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "workroomRef": { "type": "string" },
+    "professionalWorkroomRef": { "type": ["string", "null"] },
+    "contextGraphRef": { "type": "string" },
+    "runtimeBindingRef": { "type": "string" },
+    "agentRefs": { "type": "array", "items": { "type": "string" } },
+    "sessionRefs": { "type": "array", "items": { "type": "string" } },
+    "authorityStateRefs": { "type": "array", "items": { "type": "string" } },
+    "grantRefs": { "type": "array", "items": { "type": "string" } },
+    "revocationRefs": { "type": "array", "items": { "type": "string" } },
+    "policyRefs": { "type": "array", "items": { "type": "string" } },
+    "evidenceRefs": { "type": "array", "items": { "type": "string" } },
+    "status": { "type": "string", "enum": ["active", "reduced", "suspended", "revoked", "review"] },
+    "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}
