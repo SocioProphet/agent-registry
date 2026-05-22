@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "agent-registry.authority-restoration-decision.v0.1",
+  "recordType": "AuthorityRestorationDecision",
+  "restorationId": "authority-restoration-decision:agent-alpha:invalid-missing-authz",
+  "agentRef": "agent-registry://agent-alpha",
+  "prior_state_ref": "agent-authority-current-state:agent-alpha:suspended",
+  "restoration_decision": "restore",
+  "decision_actor_ref": "human://reviewer/trustops-reviewer-001",
+  "decision_actor_kind": "human",
+  "authorization_policy_ref": "policy://trustops/agent-authority-restoration-v0.1",
+  "authorization_evidence_refs": [],
+  "restored_authority_status": "active",
+  "restored_effects": {
+    "toolAccess": "unchanged",
+    "memoryAccess": "unchanged",
+    "autonomousExecution": "unchanged",
+    "routeEligibility": "unchanged",
+    "egressMode": "unchanged"
+  },
+  "effective_at": "2026-05-22T12:35:00Z",
+  "decision_timestamp": "2026-05-22T12:34:30Z",
+  "reason": "Invalid restoration because authorization evidence is missing.",
+  "receipt_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+}

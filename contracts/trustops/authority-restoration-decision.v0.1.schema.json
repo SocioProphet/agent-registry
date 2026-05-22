@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/trustops/authority-restoration-decision.v0.1.schema.json",
+  "title": "Authority Restoration Decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "restorationId",
+    "agentRef",
+    "prior_state_ref",
+    "restoration_decision",
+    "decision_actor_ref",
+    "decision_actor_kind",
+    "authorization_policy_ref",
+    "authorization_evidence_refs",
+    "restored_authority_status",
+    "restored_effects",
+    "effective_at",
+    "decision_timestamp",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "agent-registry.authority-restoration-decision.v0.1"},
+    "recordType": {"const": "AuthorityRestorationDecision"},
+    "restorationId": {"type": "string"},
+    "agentRef": {"type": "string"},
+    "prior_state_ref": {"type": "string"},
+    "restoration_decision": {"type": "string", "enum": ["restore", "deny", "require-review"]},
+    "decision_actor_ref": {"type": "string"},
+    "decision_actor_kind": {"type": "string", "enum": ["human", "policy-engine", "service", "governance-agent"]},
+    "authorization_policy_ref": {"type": "string"},
+    "authorization_evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "restored_authority_status": {"type": "string", "enum": ["active", "reduced", "suspended", "revoked"]},
+    "restored_effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toolAccess", "memoryAccess", "autonomousExecution", "routeEligibility", "egressMode"],
+      "properties": {
+        "toolAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "memoryAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "autonomousExecution": {"type": "string", "enum": ["unchanged", "require-human-approval", "suspended", "revoked"]},
+        "routeEligibility": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "egressMode": {"type": "string", "enum": ["unchanged", "restricted", "blocked"]}
+      }
+    },
+    "effective_at": {"type": "string"},
+    "decision_timestamp": {"type": "string"},
+    "reason": {"type": "string"},
+    "receipt_hash": {"type": "string", "pattern": "^sha256:"},
+    "labels": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}
