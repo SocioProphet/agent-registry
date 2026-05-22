@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/trustops/agent-authority-current-state.v0.1.schema.json",
+  "title": "Agent Authority Current State v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "stateId",
+    "agentRef",
+    "computed_at",
+    "authority_status",
+    "effective_decision_ref",
+    "source_decision_refs",
+    "evidenceRefs",
+    "authorityEffects",
+    "restoration_required",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "agent-registry.agent-authority-current-state.v0.1"},
+    "recordType": {"const": "AgentAuthorityCurrentState"},
+    "stateId": {"type": "string"},
+    "agentRef": {"type": "string"},
+    "computed_at": {"type": "string"},
+    "authority_status": {"type": "string", "enum": ["active", "reduced", "suspended", "revoked"]},
+    "effective_decision_ref": {"type": "string"},
+    "source_decision_refs": {"type": "array", "items": {"type": "string"}},
+    "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+    "authorityEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["toolAccess", "memoryAccess", "autonomousExecution", "routeEligibility", "egressMode"],
+      "properties": {
+        "toolAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "memoryAccess": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "autonomousExecution": {"type": "string", "enum": ["unchanged", "require-human-approval", "suspended", "revoked"]},
+        "routeEligibility": {"type": "string", "enum": ["unchanged", "reduced", "suspended", "revoked"]},
+        "egressMode": {"type": "string", "enum": ["unchanged", "restricted", "blocked"]}
+      }
+    },
+    "restoration_required": {"type": "boolean"},
+    "restoration_policy_ref": {"type": "string"},
+    "restoration_conditions": {"type": "array", "items": {"type": "string"}},
+    "receipt_hash": {"type": "string", "pattern": "^sha256:"},
+    "labels": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}
