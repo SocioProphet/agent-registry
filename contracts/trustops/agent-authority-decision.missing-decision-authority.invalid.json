@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "agent-registry.trustops-agent-authority-decision.v0.1",
+  "recordType": "TrustOpsAgentAuthorityDecision",
+  "recordId": "trustops-agent-authority-decision:agent-alpha-invalid-missing-authority",
+  "agentRef": "agent-registry://agent-alpha",
+  "receiptRef": "trustops-receipt:agent-alpha-quarantine-001",
+  "receipt_outcome": "quarantine",
+  "authority_decision": "suspended",
+  "decision_actor_ref": "service://trustops-authority-evaluator-v0.1",
+  "decision_actor_kind": "service",
+  "authorization_policy_ref": "policy://trustops/agent-authority-v0.1",
+  "authorization_evidence_refs": [
+    "policy://trustops/agent-authority-v0.1",
+    "trustops-receipt:agent-alpha-quarantine-001"
+  ],
+  "effective_at": "2026-05-21T18:30:00Z",
+  "decision_timestamp": "2026-05-21T18:29:00Z",
+  "policyRefs": ["policy://trustops/agent-authority-v0.1"],
+  "gateRefs": ["gate://trustops/quarantine-suspend"],
+  "evidenceRefs": ["trustops-receipt:agent-alpha-quarantine-001"],
+  "authorityEffects": {
+    "toolAccess": "suspended",
+    "memoryAccess": "suspended",
+    "autonomousExecution": "suspended",
+    "routeEligibility": "suspended",
+    "egressMode": "blocked"
+  },
+  "restored_by_policy": {
+    "allowed": true,
+    "policyRef": "policy://trustops/agent-authority-restoration-v0.1",
+    "restoration_conditions": [
+      "fresh passing TrustOps receipt",
+      "human restoration approval"
+    ]
+  }
+}
