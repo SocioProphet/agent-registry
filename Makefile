@@ -16,6 +16,7 @@ validate-trustops-agent-authority-decision:
 	python3 -m json.tool contracts/trustops/agent-authority-decision.v0.1.schema.json >/dev/null
 	python3 -m json.tool contracts/trustops/agent-authority-decision.v0.1.example.json >/dev/null
 	python3 -m json.tool contracts/trustops/agent-authority-decision.pass-revoked.invalid.json >/dev/null
+	python3 -m json.tool contracts/trustops/agent-authority-decision.missing-decision-authority.invalid.json >/dev/null
 	python3 tools/validate_trustops_agent_authority_decision.py
 
 test:
