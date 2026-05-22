@@ -6,13 +6,16 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_SCHEMA = ROOT / "contracts" / "trustops" / "agent-authority-current-state.v0.1.schema.json"
 RESTORE_SCHEMA = ROOT / "contracts" / "trustops" / "authority-restoration-decision.v0.1.schema.json"
 ACTIVE = ROOT / "contracts" / "trustops" / "agent-authority-current-state.active.example.json"
+REDUCED = ROOT / "contracts" / "trustops" / "agent-authority-current-state.reduced.example.json"
 SUSPENDED = ROOT / "contracts" / "trustops" / "agent-authority-current-state.suspended.example.json"
+REVOKED = ROOT / "contracts" / "trustops" / "agent-authority-current-state.revoked.example.json"
+RAW_RECEIPT_INVALID = ROOT / "contracts" / "trustops" / "agent-authority-current-state.raw-receipt.invalid.json"
 RESTORE = ROOT / "contracts" / "trustops" / "authority-restoration-decision.restore.example.json"
 INVALID_RESTORE = ROOT / "contracts" / "trustops" / "authority-restoration-decision.missing-authorization.invalid.json"
 
@@ -115,6 +118,16 @@ def validate_effects(value: Any, label: str) -> None:
         require_string(value, key)
 
 
+def require_authority_decision_ref(value: str, label: str) -> None:
+    if value.startswith("trustops-receipt:"):
+        fail(f"{label} must reference an authority decision, not a raw TrustOps receipt")
+    if not (
+        value.startswith("trustops-agent-authority-decision:")
+        or value.startswith("authority-restoration-decision:")
+    ):
+        fail(f"{label} must reference an authority decision or restoration decision")
+
+
 def validate_state(record: dict[str, Any]) -> None:
     missing = sorted(STATE_REQUIRED - set(record))
     if missing:
@@ -127,7 +140,10 @@ def validate_state(record: dict[str, Any]) -> None:
         require_string(record, key)
     if record["authority_status"] not in STATUS:
         fail(f"unknown authority_status: {record['authority_status']}")
-    require_list(record, "source_decision_refs")
+    require_authority_decision_ref(record["effective_decision_ref"], "effective_decision_ref")
+    source_refs = require_list(record, "source_decision_refs")
+    for index, source_ref in enumerate(source_refs):
+        require_authority_decision_ref(source_ref, f"source_decision_refs[{index}]")
     require_list(record, "evidenceRefs")
     validate_effects(record.get("authorityEffects"), "authorityEffects")
     if not isinstance(record.get("restoration_required"), bool):
@@ -181,7 +197,7 @@ def validate_restoration(record: dict[str, Any]) -> None:
         fail("non-restore decisions cannot restore active authority")
 
 
-def expect_invalid(path: Path, validator, label: str) -> None:
+def expect_invalid(path: Path, validator: Callable[[dict[str, Any]], None], label: str) -> None:
     try:
         validator(load_json(path))
     except ValidationError:
@@ -193,10 +209,11 @@ def main() -> int:
     try:
         validate_schema(load_json(STATE_SCHEMA), STATE_REQUIRED, "state")
         validate_schema(load_json(RESTORE_SCHEMA), RESTORE_REQUIRED, "restoration")
-        validate_state(load_json(ACTIVE))
-        validate_state(load_json(SUSPENDED))
+        for fixture in (ACTIVE, REDUCED, SUSPENDED, REVOKED):
+            validate_state(load_json(fixture))
         validate_restoration(load_json(RESTORE))
         expect_invalid(INVALID_RESTORE, validate_restoration, "missing restoration authorization")
+        expect_invalid(RAW_RECEIPT_INVALID, validate_state, "raw receipt derived state")
     except ValidationError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
