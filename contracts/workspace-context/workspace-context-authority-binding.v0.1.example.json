@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "agent-registry.workspace-context-authority-binding.v0.1",
+  "recordType": "WorkspaceContextAuthorityBinding",
+  "bindingId": "workspace-context-authority-binding-demo-0001",
+  "createdAt": "2026-05-22T17:05:00Z",
+  "workroomRef": "workroom://workroom-demo-0001",
+  "professionalWorkroomRef": "professional-workroom://workroom-demo-0001",
+  "contextGraphRef": "ctxgraph-demo-0001",
+  "runtimeBindingRef": "runtime-binding-demo-0001",
+  "agentRefs": [
+    "agent-registry://agents/context-fabric-reviewer"
+  ],
+  "sessionRefs": [
+    "urn:srcos:session:context-fabric-demo-0001"
+  ],
+  "authorityStateRefs": [
+    "agent-authority-current-state:context-fabric-reviewer:active"
+  ],
+  "grantRefs": [
+    "agent-registry://grants/context-fabric-demo-0001"
+  ],
+  "revocationRefs": [],
+  "policyRefs": [
+    "policy-decision://policy-demo-ai-use/decision-0001"
+  ],
+  "evidenceRefs": [
+    "agentplane://evidence/workroom-context-demo-0001",
+    "platform://workspace-context-record-demo-0001"
+  ],
+  "status": "active",
+  "labels": {
+    "surface": "workspace-context",
+    "fixture": "public-synthetic"
+  }
+}
