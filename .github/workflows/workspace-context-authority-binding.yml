@@ -1,0 +1,34 @@
+name: workspace-context-authority-binding
+
+on:
+  pull_request:
+    paths:
+      - "docs/workspace-context-authority-binding.md"
+      - "contracts/workspace-context/**"
+      - "tools/validate_workspace_context_authority_binding.py"
+      - ".github/workflows/workspace-context-authority-binding.yml"
+      - "Makefile"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/workspace-context-authority-binding.md"
+      - "contracts/workspace-context/**"
+      - "tools/validate_workspace_context_authority_binding.py"
+      - ".github/workflows/workspace-context-authority-binding.yml"
+      - "Makefile"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-workspace-context-authority-binding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate Workspace Context authority binding
+        run: make validate-workspace-context-authority-binding
