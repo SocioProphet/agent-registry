@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -30,6 +30,11 @@ validate-authority-state-contracts:
 	python3 -m json.tool contracts/trustops/authority-restoration-decision.restore.example.json >/dev/null
 	python3 -m json.tool contracts/trustops/authority-restoration-decision.missing-authorization.invalid.json >/dev/null
 	python3 tools/validate_authority_state_contracts.py
+
+validate-authority-state-lookup:
+	python3 tools/authority_state_lookup.py get agent-registry://agent-alpha --status active >/tmp/agent-registry-authority-active.json
+	python3 tools/authority_state_lookup.py get agent-registry://agent-alpha --state-file contracts/trustops/agent-authority-current-state.suspended.example.json >/tmp/agent-registry-authority-suspended.json
+	! python3 tools/authority_state_lookup.py get agent-registry://agent-alpha --state-file contracts/trustops/agent-authority-current-state.raw-receipt.invalid.json >/tmp/agent-registry-authority-invalid.json
 
 test:
 	python3 -m pytest -q tools/tests
