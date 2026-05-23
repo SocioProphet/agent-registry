@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "agent-registry.control-plane-capability-grant.v0.1",
+  "recordType": "ControlPlaneCapabilityGrant",
+  "grantId": "grant-control-plane-matrix-triage-001",
+  "subjectAgent": "agent://matrix-triage-assistant",
+  "authorityClass": "tool_grant",
+  "allowedScopes": [
+    "matrix.room.read",
+    "case.intake.summarize",
+    "support.ticket.propose"
+  ],
+  "deniedScopes": [
+    "case.record.mutate",
+    "matrix.room.publish",
+    "production.deploy"
+  ],
+  "runtimeAuthority": {
+    "state": "active",
+    "expiresAt": "2026-05-07T23:59:59Z",
+    "revoked": false,
+    "revocationReason": null
+  },
+  "policyRef": "policy-fabric://control-plane/matrix-triage-readonly-v0",
+  "delegationRef": null,
+  "admissionRef": null,
+  "notes": "Read-only public-intake grant fixture. Broker enforcement belongs in mcp-a2a-zero-trust. Execution admission, when needed, belongs in agentplane.",
+  "labels": {
+    "fixture": "public-synthetic",
+    "surface": "control-plane"
+  }
+}

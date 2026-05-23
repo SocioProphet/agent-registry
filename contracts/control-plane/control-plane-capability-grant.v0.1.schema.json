@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/control-plane/control-plane-capability-grant.v0.1.schema.json",
+  "title": "ControlPlaneCapabilityGrant",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "grantId",
+    "subjectAgent",
+    "authorityClass",
+    "allowedScopes",
+    "deniedScopes",
+    "runtimeAuthority",
+    "policyRef"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "agent-registry.control-plane-capability-grant.v0.1"},
+    "recordType": {"const": "ControlPlaneCapabilityGrant"},
+    "grantId": {"type": "string"},
+    "subjectAgent": {"type": "string"},
+    "authorityClass": {"type": "string", "enum": ["tool_grant", "event_read", "event_write", "context_read", "bridge_export"]},
+    "allowedScopes": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "deniedScopes": {"type": "array", "items": {"type": "string"}},
+    "runtimeAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "expiresAt", "revoked"],
+      "properties": {
+        "state": {"type": "string", "enum": ["active", "reduced", "suspended", "revoked"]},
+        "expiresAt": {"type": "string"},
+        "revoked": {"type": "boolean"},
+        "revocationReason": {"type": ["string", "null"]}
+      }
+    },
+    "policyRef": {"type": "string"},
+    "delegationRef": {"type": ["string", "null"]},
+    "admissionRef": {"type": ["string", "null"]},
+    "notes": {"type": "string"},
+    "labels": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}
