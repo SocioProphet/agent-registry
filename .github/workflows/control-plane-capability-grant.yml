@@ -1,0 +1,34 @@
+name: control-plane-capability-grant
+
+on:
+  pull_request:
+    paths:
+      - "docs/control-plane-grants-and-runtime-authority.md"
+      - "contracts/control-plane/**"
+      - "tools/validate_control_plane_capability_grant.py"
+      - ".github/workflows/control-plane-capability-grant.yml"
+      - "Makefile"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/control-plane-grants-and-runtime-authority.md"
+      - "contracts/control-plane/**"
+      - "tools/validate_control_plane_capability_grant.py"
+      - ".github/workflows/control-plane-capability-grant.yml"
+      - "Makefile"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-control-plane-capability-grant:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate control-plane capability grant
+        run: make validate-control-plane-capability-grant
