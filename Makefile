@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -40,6 +40,11 @@ validate-workspace-context-authority-binding:
 	python3 -m json.tool contracts/workspace-context/workspace-context-authority-binding.v0.1.schema.json >/dev/null
 	python3 -m json.tool contracts/workspace-context/workspace-context-authority-binding.v0.1.example.json >/dev/null
 	python3 tools/validate_workspace_context_authority_binding.py
+
+validate-control-plane-capability-grant:
+	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.schema.json >/dev/null
+	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.example.json >/dev/null
+	python3 tools/validate_control_plane_capability_grant.py
 
 test:
 	python3 -m pytest -q tools/tests
