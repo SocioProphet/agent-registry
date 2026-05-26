@@ -13,6 +13,8 @@ SCHEMA = ROOT / "contracts" / "trustops" / "agent-authority-decision.v0.1.schema
 EXAMPLE = ROOT / "contracts" / "trustops" / "agent-authority-decision.v0.1.example.json"
 INVALID_PASS_REVOKED = ROOT / "contracts" / "trustops" / "agent-authority-decision.pass-revoked.invalid.json"
 INVALID_MISSING_AUTHORITY = ROOT / "contracts" / "trustops" / "agent-authority-decision.missing-decision-authority.invalid.json"
+INVALID_REVIEW_UNCHANGED = ROOT / "contracts" / "trustops" / "agent-authority-decision.require-review-unchanged.invalid.json"
+INVALID_REVOKE_REDUCED = ROOT / "contracts" / "trustops" / "agent-authority-decision.revoke-reduced.invalid.json"
 
 REQUIRED_TOP_LEVEL = {
     "schemaVersion",
@@ -63,7 +65,16 @@ MAX_AUTHORITY_BY_RECEIPT = {
     "revoke": "revoked",
 }
 
+MIN_AUTHORITY_BY_RECEIPT = {
+    "require-review": "reduced",
+    "quarantine": "suspended",
+    "block": "suspended",
+    "rollback": "suspended",
+    "revoke": "revoked",
+}
+
 DECISION_ACTOR_KINDS = {"human", "policy-engine", "service", "governance-agent"}
+ACCESS_EFFECTS = {"toolAccess", "memoryAccess", "routeEligibility"}
 
 
 class ValidationError(Exception):
@@ -122,6 +133,58 @@ def validate_schema(schema: dict[str, Any]) -> None:
         fail("decision_actor_kind enum mismatch")
 
 
+def validate_authority_bound(receipt_outcome: str, authority_decision: str) -> None:
+    max_authority = MAX_AUTHORITY_BY_RECEIPT[receipt_outcome]
+    if AUTHORITY_RANK[authority_decision] > AUTHORITY_RANK[max_authority]:
+        fail(
+            "authority_decision exceeds receipt_outcome bound: "
+            f"{receipt_outcome} -> {authority_decision}"
+        )
+
+    min_authority = MIN_AUTHORITY_BY_RECEIPT.get(receipt_outcome)
+    if min_authority and AUTHORITY_RANK[authority_decision] < AUTHORITY_RANK[min_authority]:
+        fail(
+            "authority_decision is too weak for receipt_outcome: "
+            f"{receipt_outcome} -> {authority_decision}"
+        )
+
+
+def validate_effects(receipt_outcome: str, authority_decision: str, effects: dict[str, Any]) -> None:
+    for key in ("toolAccess", "memoryAccess", "autonomousExecution", "routeEligibility", "egressMode"):
+        require_non_empty_string(effects, key)
+
+    changed = any(value != "unchanged" for value in effects.values())
+    if authority_decision == "unchanged" and changed:
+        fail("authority_decision=unchanged requires unchanged authorityEffects")
+    if authority_decision != "unchanged" and not changed:
+        fail("non-unchanged authority_decision requires changed authorityEffects")
+
+    if receipt_outcome == "require-review":
+        if authority_decision != "reduced":
+            fail("require-review receipt_outcome must reduce authority")
+        if effects.get("autonomousExecution") != "require-human-approval":
+            fail("require-review must require human approval for autonomousExecution")
+
+    if receipt_outcome in {"quarantine", "block", "rollback"}:
+        if authority_decision != "suspended":
+            fail(f"{receipt_outcome} receipt_outcome must suspend authority")
+        if effects.get("autonomousExecution") != "suspended":
+            fail(f"{receipt_outcome} must suspend autonomousExecution")
+        if effects.get("egressMode") != "blocked":
+            fail(f"{receipt_outcome} must block egressMode")
+
+    if receipt_outcome == "revoke":
+        if authority_decision != "revoked":
+            fail("revoke receipt_outcome must revoke authority")
+        for key in ACCESS_EFFECTS:
+            if effects.get(key) != "revoked":
+                fail(f"revoke must set {key}=revoked")
+        if effects.get("autonomousExecution") != "revoked":
+            fail("revoke must revoke autonomousExecution")
+        if effects.get("egressMode") != "blocked":
+            fail("revoke must block egressMode")
+
+
 def validate_record(record: dict[str, Any]) -> None:
     missing = sorted(REQUIRED_TOP_LEVEL - set(record))
     if missing:
@@ -160,15 +223,7 @@ def validate_record(record: dict[str, Any]) -> None:
     if authority_decision not in AUTHORITY_RANK:
         fail(f"unknown authority_decision: {authority_decision}")
 
-    max_authority = MAX_AUTHORITY_BY_RECEIPT[receipt_outcome]
-    if AUTHORITY_RANK[authority_decision] > AUTHORITY_RANK[max_authority]:
-        fail(
-            "authority_decision exceeds receipt_outcome bound: "
-            f"{receipt_outcome} -> {authority_decision}"
-        )
-
-    if receipt_outcome in {"block", "rollback", "revoke"} and authority_decision == "unchanged":
-        fail(f"{receipt_outcome} cannot leave authority unchanged")
+    validate_authority_bound(receipt_outcome, authority_decision)
 
     if authority_decision != "unchanged":
         require_non_empty_list(record, "authorization_evidence_refs")
@@ -176,8 +231,7 @@ def validate_record(record: dict[str, Any]) -> None:
     effects = record.get("authorityEffects")
     if not isinstance(effects, dict):
         fail("authorityEffects must be an object")
-    for key in ("toolAccess", "memoryAccess", "autonomousExecution", "routeEligibility", "egressMode"):
-        require_non_empty_string(effects, key)
+    validate_effects(receipt_outcome, authority_decision, effects)
 
     restored = record.get("restored_by_policy")
     if not isinstance(restored, dict):
@@ -205,6 +259,8 @@ def main() -> int:
         validate_record(load_json(EXAMPLE))
         expect_invalid(INVALID_PASS_REVOKED, "pass-revoked")
         expect_invalid(INVALID_MISSING_AUTHORITY, "missing-decision-authority")
+        expect_invalid(INVALID_REVIEW_UNCHANGED, "require-review-unchanged")
+        expect_invalid(INVALID_REVOKE_REDUCED, "revoke-reduced")
     except ValidationError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
