@@ -21,6 +21,48 @@ Guardrail Fabric owns TrustOps runtime action mapping.
 
 AgentPlane consumes current authority state during attempt admission.
 
+## Receipt evidence versus authority decision
+
+The registry keeps the TrustOps receipt outcome separate from the governed authority decision.
+
+A TrustOps receipt records what happened at a trust or safety gate:
+
+```text
+pass | warn | require-review | quarantine | block | rollback | revoke
+```
+
+An authority decision records what the registry decided to do to runtime authority:
+
+```text
+unchanged | reduced | suspended | revoked
+```
+
+Those fields must not collapse into a generic success flag. A high-uncertainty `require-review` receipt is not equivalent to a hard tool-abuse `revoke` receipt, and neither is itself the current authority state. The decision carries its own actor, policy, evidence, gate refs, `effective_at`, and restoration posture.
+
+## Authority-decision semantic rules
+
+The validator enforces the following receipt-to-authority bounds:
+
+| TrustOps receipt outcome | Required authority posture |
+|---|---|
+| `pass` | `unchanged` only |
+| `warn` | at most `reduced` |
+| `require-review` | exactly `reduced` with `autonomousExecution=require-human-approval` |
+| `quarantine` | exactly `suspended` |
+| `block` | exactly `suspended` |
+| `rollback` | exactly `suspended` |
+| `revoke` | exactly `revoked` |
+
+Additional effect rules:
+
+- `authority_decision=unchanged` requires all `authorityEffects` to remain `unchanged`.
+- Non-unchanged authority decisions require at least one changed authority effect.
+- `quarantine`, `block`, and `rollback` suspend autonomous execution and block egress.
+- `revoke` revokes tool access, memory access, autonomous execution, and route eligibility, and blocks egress.
+- Any non-unchanged authority decision requires authorization evidence refs.
+
+These rules preserve the audit seam: receipt as evidence, authority change as governed decision.
+
 ## Current state
 
 The current-state record includes:
@@ -67,6 +109,7 @@ Restoration requires:
 
 ```bash
 make validate-authority-state-contracts
+make validate-trustops-agent-authority-decision
 ```
 
 The validator checks:
@@ -75,6 +118,10 @@ The validator checks:
 - restoration decision fixture
 - missing restoration authorization negative fixture
 - raw-receipt-derived current-state negative fixture
+- TrustOps authority-decision receipt/authority separation
+- invalid pass-to-revoked authority escalation
+- invalid require-review-with-unchanged authority
+- invalid revoke-with-only-reduced authority
 
 ## Non-goals
 

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "agent-registry.trustops-agent-authority-decision.v0.1",
+  "recordType": "TrustOpsAgentAuthorityDecision",
+  "recordId": "trustops-agent-authority-decision:agent-alpha-invalid-revoke-reduced",
+  "agentRef": "agent-registry://agent-alpha",
+  "receiptRef": "trustops-receipt:agent-alpha-revoke-001",
+  "receipt_outcome": "revoke",
+  "authority_decision": "reduced",
+  "decision_actor_ref": "service://trustops-authority-evaluator-v0.1",
+  "decision_actor_kind": "service",
+  "decision_authority_ref": "authority://agent-registry/trustops-agent-authority-update",
+  "authorization_policy_ref": "policy://trustops/agent-authority-v0.1",
+  "authorization_evidence_refs": [
+    "policy://trustops/agent-authority-v0.1",
+    "trustops-receipt:agent-alpha-revoke-001"
+  ],
+  "effective_at": "2026-05-26T20:11:00Z",
+  "decision_timestamp": "2026-05-26T20:10:00Z",
+  "policyRefs": ["policy://trustops/agent-authority-v0.1"],
+  "gateRefs": ["gate://trustops/tool-abuse-revoke"],
+  "evidenceRefs": ["trustops-receipt:agent-alpha-revoke-001"],
+  "authorityEffects": {
+    "toolAccess": "reduced",
+    "memoryAccess": "reduced",
+    "autonomousExecution": "require-human-approval",
+    "routeEligibility": "reduced",
+    "egressMode": "restricted"
+  },
+  "restored_by_policy": {
+    "allowed": false,
+    "policyRef": "policy://trustops/no-restore"
+  },
+  "labels": {
+    "issue": "SocioProphet/agent-registry#17",
+    "fixture": "revoke-reduced-invalid"
+  }
+}

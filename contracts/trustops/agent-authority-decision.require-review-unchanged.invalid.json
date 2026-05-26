@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "agent-registry.trustops-agent-authority-decision.v0.1",
+  "recordType": "TrustOpsAgentAuthorityDecision",
+  "recordId": "trustops-agent-authority-decision:agent-alpha-invalid-review-unchanged",
+  "agentRef": "agent-registry://agent-alpha",
+  "receiptRef": "trustops-receipt:agent-alpha-review-001",
+  "receipt_outcome": "require-review",
+  "authority_decision": "unchanged",
+  "decision_actor_ref": "service://trustops-authority-evaluator-v0.1",
+  "decision_actor_kind": "service",
+  "decision_authority_ref": "authority://agent-registry/trustops-agent-authority-update",
+  "authorization_policy_ref": "policy://trustops/agent-authority-v0.1",
+  "authorization_evidence_refs": [
+    "policy://trustops/agent-authority-v0.1",
+    "trustops-receipt:agent-alpha-review-001"
+  ],
+  "effective_at": "2026-05-26T20:10:00Z",
+  "decision_timestamp": "2026-05-26T20:09:00Z",
+  "policyRefs": ["policy://trustops/agent-authority-v0.1"],
+  "gateRefs": ["gate://trustops/high-uncertainty-human-review"],
+  "evidenceRefs": ["trustops-receipt:agent-alpha-review-001"],
+  "authorityEffects": {
+    "toolAccess": "unchanged",
+    "memoryAccess": "unchanged",
+    "autonomousExecution": "unchanged",
+    "routeEligibility": "unchanged",
+    "egressMode": "unchanged"
+  },
+  "restored_by_policy": {
+    "allowed": true,
+    "policyRef": "policy://trustops/agent-authority-restoration-v0.1",
+    "restoration_conditions": ["fresh passing TrustOps receipt"]
+  },
+  "labels": {
+    "issue": "SocioProphet/agent-registry#17",
+    "fixture": "require-review-unchanged-invalid"
+  }
+}
