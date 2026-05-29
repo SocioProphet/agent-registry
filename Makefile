@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -47,6 +47,13 @@ validate-control-plane-capability-grant:
 	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.schema.json >/dev/null
 	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.example.json >/dev/null
 	python3 tools/validate_control_plane_capability_grant.py
+
+validate-agent-wall-context:
+	python3 -m json.tool contracts/wallguard/agent-wall-context.v0.1.schema.json >/dev/null
+	python3 -m json.tool contracts/wallguard/agent-wall-context.active.example.json >/dev/null
+	python3 -m json.tool contracts/wallguard/agent-wall-context.revoked-invalid.json >/dev/null
+	python3 -m json.tool contracts/wallguard/agent-wall-context.contaminated-global-invalid.json >/dev/null
+	python3 tools/validate_agent_wall_context.py
 
 test:
 	python3 -m pytest -q tools/tests
