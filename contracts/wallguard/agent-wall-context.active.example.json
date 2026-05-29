@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "agent-registry.agent-wall-context.v0.1",
+  "recordType": "AgentWallContext",
+  "contextId": "agent-wall-context-agent-alpha-client-a-matter-x",
+  "agentRef": "agent-registry://agent-alpha",
+  "sessionRef": "agent-session://agent-alpha/session-wall-client-a-matter-x-001",
+  "activeWorkroomRef": "workroom://client-a/matter-x",
+  "clientRef": "client://client-a",
+  "matterRef": "matter://client-a/matter-x",
+  "wallRef": "wall://client-a/matter-x",
+  "memberships": [
+    {
+      "wallRef": "wall://client-a/matter-x",
+      "clientRef": "client://client-a",
+      "matterRef": "matter://client-a/matter-x",
+      "status": "active",
+      "scope": "full_wall_context",
+      "acknowledgmentRef": "ack://wall/client-a/matter-x/v0",
+      "effectiveFrom": "2026-05-29T00:00:00Z"
+    }
+  ],
+  "recusalState": "none",
+  "sessionState": "wall_scoped",
+  "allowedMemoryCompartments": ["client_scoped", "matter_scoped", "wall_restricted", "clean_room_derived"],
+  "allowedToolClasses": ["retrieval.read", "same-wall.collaboration", "clean-room.release.request"],
+  "receiptRefs": ["wallguard-receipt://same-wall-context-001"],
+  "evidenceRefs": ["SocioProphet/ProCybernetica#103", "SocioProphet/policy-fabric#87"],
+  "receipt_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "labels": {
+    "wallguard": "true",
+    "scope": "fixture"
+  }
+}

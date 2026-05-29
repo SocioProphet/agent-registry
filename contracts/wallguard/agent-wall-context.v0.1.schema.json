@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/agent-registry/wallguard/agent-wall-context.v0.1.schema.json",
+  "title": "Agent Wall Context v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "contextId",
+    "agentRef",
+    "sessionRef",
+    "activeWorkroomRef",
+    "clientRef",
+    "matterRef",
+    "wallRef",
+    "memberships",
+    "recusalState",
+    "sessionState",
+    "allowedMemoryCompartments",
+    "allowedToolClasses",
+    "evidenceRefs",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "agent-registry.agent-wall-context.v0.1"},
+    "recordType": {"const": "AgentWallContext"},
+    "contextId": {"type": "string", "minLength": 1},
+    "agentRef": {"type": "string", "minLength": 1},
+    "sessionRef": {"type": "string", "minLength": 1},
+    "activeWorkroomRef": {"type": "string", "minLength": 1},
+    "clientRef": {"type": "string", "minLength": 1},
+    "matterRef": {"type": "string", "minLength": 1},
+    "wallRef": {"type": "string", "minLength": 1},
+    "memberships": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/membership"}
+    },
+    "recusalState": {"enum": ["none", "recused", "revoked", "expired"]},
+    "sessionState": {"enum": ["clean", "wall_scoped", "contaminated", "unknown"]},
+    "allowedMemoryCompartments": {
+      "type": "array",
+      "items": {"enum": ["user_private", "client_scoped", "matter_scoped", "wall_restricted", "clean_room_derived", "firm_approved", "global"]}
+    },
+    "allowedToolClasses": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "receiptRefs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "receipt_hash": {"type": "string", "pattern": "^sha256:"},
+    "labels": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "$defs": {
+    "membership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wallRef", "clientRef", "matterRef", "status", "scope", "acknowledgmentRef"],
+      "properties": {
+        "wallRef": {"type": "string", "minLength": 1},
+        "clientRef": {"type": "string", "minLength": 1},
+        "matterRef": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "revoked", "expired", "pending"]},
+        "scope": {"enum": ["read", "collaborate", "delegate", "tool_use", "memory_read", "memory_write", "full_wall_context"]},
+        "acknowledgmentRef": {"type": "string", "minLength": 1},
+        "effectiveFrom": {"type": "string"},
+        "expiresAt": {"type": "string"}
+      }
+    }
+  }
+}
