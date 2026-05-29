@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "agent-registry.agent-wall-context.v0.1",
+  "recordType": "AgentWallContext",
+  "contextId": "agent-wall-context-agent-alpha-revoked-invalid",
+  "agentRef": "agent-registry://agent-alpha",
+  "sessionRef": "agent-session://agent-alpha/session-wall-client-a-matter-x-002",
+  "activeWorkroomRef": "workroom://client-a/matter-x",
+  "clientRef": "client://client-a",
+  "matterRef": "matter://client-a/matter-x",
+  "wallRef": "wall://client-a/matter-x",
+  "memberships": [
+    {
+      "wallRef": "wall://client-a/matter-x",
+      "clientRef": "client://client-a",
+      "matterRef": "matter://client-a/matter-x",
+      "status": "revoked",
+      "scope": "full_wall_context",
+      "acknowledgmentRef": "ack://wall/client-a/matter-x/v0"
+    }
+  ],
+  "recusalState": "none",
+  "sessionState": "wall_scoped",
+  "allowedMemoryCompartments": ["wall_restricted"],
+  "allowedToolClasses": ["same-wall.collaboration"],
+  "receiptRefs": ["wallguard-receipt://revoked-context-invalid-001"],
+  "evidenceRefs": ["SocioProphet/ProCybernetica#103"],
+  "receipt_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+}
