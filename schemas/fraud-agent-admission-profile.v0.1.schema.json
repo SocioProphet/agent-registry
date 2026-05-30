@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.ai/agent-registry/fraud-agent-admission-profile.v0.1.schema.json",
+  "title": "FraudAgentAdmissionProfile",
+  "description": "Admission profile for Fraud Decision Intelligence agents. This profile permits report-only fraud analysis and gates human-impacting actions, label canonization, memory writeback, and model-score-as-proof misuse.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "agent-registry.socioprophet.ai/v0.1" },
+    "kind": { "const": "FraudAgentAdmissionProfile" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "createdAt", "capabilityRef", "doctrineRef", "ontologyRef", "modelGovernanceRef"],
+      "properties": {
+        "profileId": { "type": "string", "pattern": "^urn:socioprophet:agent-admission:fraud:" },
+        "createdAt": { "type": "string" },
+        "capabilityRef": { "const": "fraud-decision-intelligence-control-plane" },
+        "doctrineRef": { "type": "string" },
+        "ontologyRef": { "type": "string" },
+        "modelGovernanceRef": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "allowedCapabilities", "gatedCapabilities", "prohibitedCapabilities", "requiredReceipts", "claimBoundaries", "memoryWriteback"],
+      "properties": {
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentRef", "agentClass", "authorityMode"],
+          "properties": {
+            "agentRef": { "type": "string" },
+            "agentClass": { "type": "string", "enum": ["fraud-analysis", "fraud-evidence-review", "fraud-scenario-proposal", "fraud-reporting"] },
+            "authorityMode": { "type": "string", "enum": ["report-only", "recommendation-only", "policy-gated-action"] }
+          }
+        },
+        "allowedCapabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["public_synthetic_event_ingest", "evidence_bundle_summary", "model_rule_comparison", "residual_fraud_lift_report", "scenario_candidate_proposal", "false_positive_review", "false_negative_review", "analyst_routing_recommendation"] }
+        },
+        "gatedCapabilities": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["human_impacting_action", "label_canonization", "memory_writeback", "scenario_to_rule_promotion", "private_evidence_ingest", "live_control_action"] }
+        },
+        "prohibitedCapabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["model_score_as_proof", "graph_path_as_attribution", "benchmark_as_production_validation", "unreviewed_memory_writeback", "unproven_label_canonization", "private_customer_fixture_publication"] }
+        },
+        "requiredReceipts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["agentAdmissionReceipt", "evidenceBundleRef", "decisionReceiptRef", "policyAuthorizationRef", "modelGovernanceLedgerRef"],
+          "properties": {
+            "agentAdmissionReceipt": { "type": "string" },
+            "evidenceBundleRef": { "type": ["string", "null"] },
+            "decisionReceiptRef": { "type": ["string", "null"] },
+            "policyAuthorizationRef": { "type": ["string", "null"] },
+            "modelGovernanceLedgerRef": { "type": "string" }
+          }
+        },
+        "claimBoundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["modelScoreBoundary", "graphPathBoundary", "benchmarkBoundary", "labelBoundary", "actionBoundary"],
+          "properties": {
+            "modelScoreBoundary": { "const": "risk_signal_not_proof" },
+            "graphPathBoundary": { "const": "relationship_evidence_not_attribution" },
+            "benchmarkBoundary": { "const": "not_production_validation" },
+            "labelBoundary": { "const": "requires_provenance_and_review" },
+            "actionBoundary": { "const": "human_impacting_actions_require_policy_authorization" }
+          }
+        },
+        "memoryWriteback": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowed", "requiresReview", "reviewReceiptRef"],
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "requiresReview": { "type": "boolean" },
+            "reviewReceiptRef": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  }
+}
