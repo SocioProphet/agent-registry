@@ -1,0 +1,64 @@
+{
+  "apiVersion": "agent-registry.socioprophet.ai/v0.1",
+  "kind": "FraudAgentAdmissionProfile",
+  "metadata": {
+    "profileId": "urn:socioprophet:agent-admission:fraud:report-only:001",
+    "createdAt": "2026-05-30T23:05:00Z",
+    "capabilityRef": "fraud-decision-intelligence-control-plane",
+    "doctrineRef": "SocioProphet/ProCybernetica:docs/capabilities/fraud-decision-intelligence-control-plane.md",
+    "ontologyRef": "SocioProphet/ontogenesis:Domains/fraud-decision-intelligence.ttl",
+    "modelGovernanceRef": "SocioProphet/model-governance-ledger:schemas/fraud-decision-ledger-record.v0.1.schema.json"
+  },
+  "spec": {
+    "agent": {
+      "agentRef": "agent://fraud/report-only-analyst-v0",
+      "agentClass": "fraud-analysis",
+      "authorityMode": "report-only"
+    },
+    "allowedCapabilities": [
+      "public_synthetic_event_ingest",
+      "evidence_bundle_summary",
+      "model_rule_comparison",
+      "residual_fraud_lift_report",
+      "scenario_candidate_proposal",
+      "false_positive_review",
+      "false_negative_review",
+      "analyst_routing_recommendation"
+    ],
+    "gatedCapabilities": [
+      "human_impacting_action",
+      "label_canonization",
+      "memory_writeback",
+      "scenario_to_rule_promotion",
+      "private_evidence_ingest",
+      "live_control_action"
+    ],
+    "prohibitedCapabilities": [
+      "model_score_as_proof",
+      "graph_path_as_attribution",
+      "benchmark_as_production_validation",
+      "unreviewed_memory_writeback",
+      "unproven_label_canonization",
+      "private_customer_fixture_publication"
+    ],
+    "requiredReceipts": {
+      "agentAdmissionReceipt": "receipt://agent-registry/fraud/report-only-001",
+      "evidenceBundleRef": "evidence://fraud/public-synthetic/bundle-001",
+      "decisionReceiptRef": "decision://fraud/public-synthetic/report-only-001",
+      "policyAuthorizationRef": null,
+      "modelGovernanceLedgerRef": "urn:socioprophet:fraud-ledger:example:001"
+    },
+    "claimBoundaries": {
+      "modelScoreBoundary": "risk_signal_not_proof",
+      "graphPathBoundary": "relationship_evidence_not_attribution",
+      "benchmarkBoundary": "not_production_validation",
+      "labelBoundary": "requires_provenance_and_review",
+      "actionBoundary": "human_impacting_actions_require_policy_authorization"
+    },
+    "memoryWriteback": {
+      "allowed": false,
+      "requiresReview": true,
+      "reviewReceiptRef": null
+    }
+  }
+}
