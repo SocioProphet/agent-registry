@@ -1,0 +1,41 @@
+{
+  "apiVersion": "agent-registry.socioprophet.ai/v0.1",
+  "kind": "FraudAgentAdmissionProfile",
+  "metadata": {
+    "profileId": "urn:socioprophet:agent-admission:fraud:invalid:human-impact-no-policy",
+    "createdAt": "2026-05-30T23:06:00Z",
+    "capabilityRef": "fraud-decision-intelligence-control-plane",
+    "doctrineRef": "SocioProphet/ProCybernetica:docs/capabilities/fraud-decision-intelligence-control-plane.md",
+    "ontologyRef": "SocioProphet/ontogenesis:Domains/fraud-decision-intelligence.ttl",
+    "modelGovernanceRef": "SocioProphet/model-governance-ledger:schemas/fraud-decision-ledger-record.v0.1.schema.json"
+  },
+  "spec": {
+    "agent": {
+      "agentRef": "agent://fraud/invalid-human-impact-v0",
+      "agentClass": "fraud-analysis",
+      "authorityMode": "policy-gated-action"
+    },
+    "allowedCapabilities": ["evidence_bundle_summary", "analyst_routing_recommendation"],
+    "gatedCapabilities": ["label_canonization", "memory_writeback"],
+    "prohibitedCapabilities": ["model_score_as_proof", "benchmark_as_production_validation"],
+    "requiredReceipts": {
+      "agentAdmissionReceipt": "receipt://agent-registry/fraud/invalid-human-impact",
+      "evidenceBundleRef": "evidence://fraud/private/live-bundle",
+      "decisionReceiptRef": "decision://fraud/private/live-denial",
+      "policyAuthorizationRef": null,
+      "modelGovernanceLedgerRef": "urn:socioprophet:fraud-ledger:example:001"
+    },
+    "claimBoundaries": {
+      "modelScoreBoundary": "risk_signal_not_proof",
+      "graphPathBoundary": "relationship_evidence_not_attribution",
+      "benchmarkBoundary": "not_production_validation",
+      "labelBoundary": "requires_provenance_and_review",
+      "actionBoundary": "human_impacting_actions_require_policy_authorization"
+    },
+    "memoryWriteback": {
+      "allowed": false,
+      "requiresReview": true,
+      "reviewReceiptRef": null
+    }
+  }
+}
