@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -54,6 +54,13 @@ validate-agent-wall-context:
 	python3 -m json.tool contracts/wallguard/agent-wall-context.revoked-invalid.json >/dev/null
 	python3 -m json.tool contracts/wallguard/agent-wall-context.contaminated-global-invalid.json >/dev/null
 	python3 tools/validate_agent_wall_context.py
+
+validate-fraud-agent-admission-profile:
+	python3 -m json.tool schemas/fraud-agent-admission-profile.v0.1.schema.json >/dev/null
+	python3 -m json.tool examples/fraud-agent-admission-profile.report-only.example.json >/dev/null
+	python3 -m json.tool examples/fraud-agent-admission-profile.human-impact-no-policy.invalid.json >/dev/null
+	python3 -m json.tool examples/fraud-agent-admission-profile.memory-writeback-unreviewed.invalid.json >/dev/null
+	python3 tools/validate_fraud_agent_admission_profile.py
 
 test:
 	python3 -m pytest -q tools/tests
