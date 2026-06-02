@@ -1,0 +1,27 @@
+schema_version: effective-authority/v0.1
+repo: SocioProphet/agent-registry
+zone: C
+owner: Agent Registry capability-manifest lane
+maturity: draft
+
+authority_classes:
+  - agent_manifest
+  - capability_registry
+  - runtime_subject_declaration
+observation_channels: []
+control_channels:
+  - agent_to_agent
+egress_classes:
+  - metadata
+  - schema
+background_workers: []
+runtime_subjects: []
+connector_surfaces: []
+policy_sources:
+  - repo
+  - signed_config
+ledger_sinks:
+  - model-governance-ledger
+  - policy-fabric
+ci_validators:
+  - effective-authority-ci
