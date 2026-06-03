@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -61,6 +61,12 @@ validate-fraud-agent-admission-profile:
 	python3 -m json.tool examples/fraud-agent-admission-profile.human-impact-no-policy.invalid.json >/dev/null
 	python3 -m json.tool examples/fraud-agent-admission-profile.memory-writeback-unreviewed.invalid.json >/dev/null
 	python3 tools/validate_fraud_agent_admission_profile.py
+
+validate-trust-chain-agent-manifest-binding:
+	python3 -m json.tool schemas/trust-chain-agent-manifest-binding.v0.1.schema.json >/dev/null
+	python3 -m json.tool examples/trust-chain-agent-manifest-binding.preview.example.json >/dev/null
+	python3 -m json.tool examples/trust-chain-agent-manifest-binding.blocked.json >/dev/null
+	python3 tools/validate_trust_chain_agent_manifest_binding.py
 
 test:
 	python3 -m pytest -q tools/tests
