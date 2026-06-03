@@ -5,21 +5,26 @@ owner: Agent Registry capability-manifest lane
 maturity: draft
 
 authority_classes:
-  - agent_manifest
-  - capability_registry
-  - runtime_subject_declaration
-observation_channels: []
+  - agent_manifest_registry
+  - capability_manifest
+  - runtime_subject_catalog
+  - tool_surface_catalog
+observation_channels:
+  - memory_store
 control_channels:
+  - mcp
   - agent_to_agent
 egress_classes:
   - metadata
   - schema
 background_workers: []
-runtime_subjects: []
+runtime_subjects:
+  - registry_validator
 connector_surfaces: []
 policy_sources:
   - repo
   - signed_config
+  - runtime_contract
 ledger_sinks:
   - model-governance-ledger
   - policy-fabric
