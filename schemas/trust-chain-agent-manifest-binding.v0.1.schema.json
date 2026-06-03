@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.dev/agent-registry/trust-chain-agent-manifest-binding.v0.1.schema.json",
+  "title": "Trust Chain Agent Manifest Binding v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "binding_id", "binding_type", "agent", "capability_profile", "allowed_surfaces", "trust_chain_refs", "admission", "non_claims"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "binding_id": {"type": "string", "pattern": "^agent-registry:trust-chain-agent-binding:"},
+    "binding_type": {"const": "TrustChainAgentManifestBinding"},
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_ref", "identity_ref", "status"],
+      "properties": {
+        "agent_ref": {"type": "string", "pattern": "^agent-registry://"},
+        "identity_ref": {"type": "string"},
+        "status": {"enum": ["active", "reduced", "suspended", "revoked"]}
+      }
+    },
+    "capability_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_ref", "autonomy_tier", "effect_tier"],
+      "properties": {
+        "profile_ref": {"type": "string"},
+        "autonomy_tier": {"enum": ["read_only", "review_required", "bounded_execution", "production_operator"]},
+        "effect_tier": {"enum": ["none", "read", "propose", "write_reviewed", "write_bounded"]}
+      }
+    },
+    "allowed_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_refs", "model_route_refs", "dataset_refs", "memory_scope_refs", "runtime_class_refs"],
+      "properties": {
+        "tool_refs": {"type": "array", "items": {"type": "string"}},
+        "model_route_refs": {"type": "array", "items": {"type": "string"}},
+        "dataset_refs": {"type": "array", "items": {"type": "string"}},
+        "memory_scope_refs": {"type": "array", "items": {"type": "string"}},
+        "runtime_class_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "trust_chain_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_admission_ref", "model_admission_ref", "tool_admission_ref", "policy_profile_ref", "guardrail_decision_ref", "agentplane_validation_ref"],
+      "properties": {
+        "runtime_admission_ref": {"type": ["string", "null"]},
+        "model_admission_ref": {"type": ["string", "null"]},
+        "tool_admission_ref": {"type": ["string", "null"]},
+        "policy_profile_ref": {"type": ["string", "null"]},
+        "guardrail_decision_ref": {"type": ["string", "null"]},
+        "agentplane_validation_ref": {"type": ["string", "null"]}
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "decision", "review_required", "revocation_or_downgrade_ref"],
+      "properties": {
+        "environment": {"enum": ["preview", "staging", "production"]},
+        "decision": {"enum": ["allowed", "blocked", "review_required", "downgraded", "revoked"]},
+        "review_required": {"type": "boolean"},
+        "revocation_or_downgrade_ref": {"type": ["string", "null"]}
+      }
+    },
+    "remediation": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["step_id", "authority", "required_before_admission", "instruction"], "properties": {"step_id": {"type": "string"}, "authority": {"type": "string"}, "required_before_admission": {"type": "boolean"}, "instruction": {"type": "string"}}}},
+    "non_claims": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+  }
+}
