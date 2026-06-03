@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "binding_id": "agent-registry:trust-chain-agent-binding:agent-alpha-preview",
+  "binding_type": "TrustChainAgentManifestBinding",
+  "agent": {
+    "agent_ref": "agent-registry://agent-alpha",
+    "identity_ref": "did:sourceos:agent-alpha",
+    "status": "active"
+  },
+  "capability_profile": {
+    "profile_ref": "capability-profile://agent-alpha/preview-review-required",
+    "autonomy_tier": "review_required",
+    "effect_tier": "propose"
+  },
+  "allowed_surfaces": {
+    "tool_refs": ["tool://sherlock/search", "tool://workspace/propose-update"],
+    "model_route_refs": ["model-route://model-router/local-small-language-preview"],
+    "dataset_refs": ["dataset://demo/summarization-eval@0.1.0"],
+    "memory_scope_refs": ["memory-scope://workspace/demo-ai-ops/read-only"],
+    "runtime_class_refs": ["runtime-class://lattice-forge/notebook-preview"]
+  },
+  "trust_chain_refs": {
+    "runtime_admission_ref": "trust-chain:admit-artifact-response:demo-runtime-asset-001:allowed",
+    "model_admission_ref": "model-ledger:trust-chain-runtime-binding:demo-model-001",
+    "tool_admission_ref": "guardrail:decision:trust-chain-runtime-allow-001",
+    "policy_profile_ref": "policy://trust-chain/agent-admission/regulated-enterprise-preview",
+    "guardrail_decision_ref": "guardrail:decision:agent-alpha-preview-allow-with-review",
+    "agentplane_validation_ref": "agentplane:supply-chain-validation-artifact:runtime-asset-demo-001"
+  },
+  "admission": {
+    "environment": "preview",
+    "decision": "allowed",
+    "review_required": true,
+    "revocation_or_downgrade_ref": null
+  },
+  "remediation": [],
+  "non_claims": [
+    "Preview admission does not grant production execution authority.",
+    "This fixture does not handle live credentials.",
+    "Agent Registry records identity, capability, and allowed-surface binding; it does not replace Policy Fabric, Guardrail Fabric, AgentPlane, or Prophet Platform admission authority."
+  ]
+}
