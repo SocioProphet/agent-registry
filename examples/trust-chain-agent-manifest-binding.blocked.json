@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "binding_id": "agent-registry:trust-chain-agent-binding:agent-alpha-production-blocked",
+  "binding_type": "TrustChainAgentManifestBinding",
+  "agent": {
+    "agent_ref": "agent-registry://agent-alpha",
+    "identity_ref": "did:sourceos:agent-alpha",
+    "status": "reduced"
+  },
+  "capability_profile": {
+    "profile_ref": "capability-profile://agent-alpha/production-operator",
+    "autonomy_tier": "production_operator",
+    "effect_tier": "write_bounded"
+  },
+  "allowed_surfaces": {
+    "tool_refs": ["tool://sherlock/search", "tool://workspace/propose-update"],
+    "model_route_refs": ["model-route://model-router/local-small-language-production"],
+    "dataset_refs": ["dataset://demo/summarization-eval@0.1.0"],
+    "memory_scope_refs": ["memory-scope://workspace/demo-ai-ops/read-only"],
+    "runtime_class_refs": ["runtime-class://lattice-forge/notebook-production"]
+  },
+  "trust_chain_refs": {
+    "runtime_admission_ref": "trust-chain:admit-artifact-response:legacy-python-ml:denied",
+    "model_admission_ref": null,
+    "tool_admission_ref": null,
+    "policy_profile_ref": "policy://trust-chain/agent-admission/regulated-enterprise-production",
+    "guardrail_decision_ref": "guardrail:decision:agent-alpha-production-deny-001",
+    "agentplane_validation_ref": null
+  },
+  "admission": {
+    "environment": "production",
+    "decision": "blocked",
+    "review_required": true,
+    "revocation_or_downgrade_ref": "agent-registry://agent-alpha/authority/reduced"
+  },
+  "remediation": [
+    {
+      "step_id": "restore-runtime-admission",
+      "authority": "SocioProphet/lattice-forge",
+      "required_before_admission": true,
+      "instruction": "Patch or replace the denied runtime and emit admitted RuntimeAsset Trust Chain evidence."
+    },
+    {
+      "step_id": "restore-agentplane-validation",
+      "authority": "SocioProphet/agentplane",
+      "required_before_admission": true,
+      "instruction": "Produce AgentPlane validation, replay, and receipt refs for the admitted runtime."
+    },
+    {
+      "step_id": "restore-agent-capability",
+      "authority": "SocioProphet/agent-registry",
+      "required_before_admission": true,
+      "instruction": "Keep the agent in reduced authority until runtime, model, tool, policy, guardrail, and AgentPlane evidence are present."
+    }
+  ],
+  "non_claims": [
+    "This blocked fixture denies production agent execution while required Trust Chain evidence is missing.",
+    "This fixture does not grant live credentials or production tool rights.",
+    "Agent Registry records capability and authority posture; it does not replace runtime, policy, guardrail, or execution evidence authorities."
+  ]
+}
