@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "prophet_mesh_choir_registry_mirror",
+  "source_repo": "SocioProphet/prophet-mesh",
+  "source_contracts": [
+    "agents/*.yaml",
+    "specs/agent-choir.yaml",
+    "specs/memory-scope.yaml",
+    "specs/runtime-release-bundle.yaml"
+  ],
+  "release_channel": "private_preview",
+  "default_conductor": "michael-agent",
+  "required_controls": [
+    "identity",
+    "policy",
+    "evidence",
+    "audit"
+  ],
+  "required_default_agents": [
+    "michael-agent",
+    "memory-steward",
+    "writing-agent",
+    "governance-sentinel",
+    "research-agent",
+    "coding-agent",
+    "analytics-agent",
+    "operations-agent",
+    "creative-agent"
+  ],
+  "agents": [
+    {
+      "id": "michael-agent",
+      "kind": "conductor",
+      "label": "Michael Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "default conductor and lifelong relationship interface",
+      "capabilities": [
+        "clarify_intent",
+        "maintain_relationship_context",
+        "route_to_agent_choir",
+        "synthesize_results",
+        "preserve_approval_boundaries"
+      ],
+      "allowed_memory_scopes": ["relationship_context:approved", "project_context:approved", "customer_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "attestation", "revocation", "audit", "tenant_isolation"]
+    },
+    {
+      "id": "memory-steward",
+      "kind": "specialist",
+      "label": "Memory Steward",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "contextual, relational, preference, and evidence memory management",
+      "capabilities": ["memory_scope_resolution", "relationship_context", "project_context", "evidence_context"],
+      "allowed_memory_scopes": ["relationship_context:approved", "project_context:approved", "evidence_context:approved", "customer_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    },
+    {
+      "id": "writing-agent",
+      "kind": "specialist",
+      "label": "Writing Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "drafting, editing, synthesis, and communication artifacts",
+      "capabilities": ["email_drafting", "document_creation", "document_editing", "narrative_synthesis"],
+      "allowed_memory_scopes": ["relationship_context:approved", "customer_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    },
+    {
+      "id": "governance-sentinel",
+      "kind": "specialist",
+      "label": "Governance Sentinel",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "policy, approval, evidence, attestation, and audit enforcement",
+      "capabilities": ["policy_review", "approval_enforcement", "evidence_verification", "audit_verification"],
+      "allowed_memory_scopes": ["relationship_context:approved", "project_context:approved", "evidence_context:approved", "customer_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "attestation", "revocation", "audit", "tenant_isolation"]
+    },
+    {
+      "id": "research-agent",
+      "kind": "specialist",
+      "label": "Research Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "evidence discovery, source normalization, citation preparation, and research synthesis",
+      "capabilities": ["evidence_discovery", "source_normalization", "citation_preparation", "research_synthesis"],
+      "allowed_memory_scopes": ["project_context:approved", "evidence_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    },
+    {
+      "id": "coding-agent",
+      "kind": "specialist",
+      "label": "Coding Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "code generation, patch planning, repository analysis, tests, and review support",
+      "capabilities": ["code_generation", "code_review", "patch_planning", "test_generation", "repository_analysis"],
+      "allowed_memory_scopes": ["project_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    },
+    {
+      "id": "analytics-agent",
+      "kind": "specialist",
+      "label": "Analytics Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "metrics, traces, evidence quality, task evaluation, and analytical synthesis",
+      "capabilities": ["metrics_analysis", "trace_analysis", "evidence_quality_review", "evaluation_reporting", "analytical_synthesis"],
+      "allowed_memory_scopes": ["project_context:approved", "evidence_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    },
+    {
+      "id": "operations-agent",
+      "kind": "specialist",
+      "label": "Operations Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "operational planning, workflow coordination, runbook support, and approval-aware execution",
+      "capabilities": ["operations_planning", "workflow_coordination", "runbook_support", "approval_tracking", "status_reporting"],
+      "allowed_memory_scopes": ["project_context:approved", "customer_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit", "revocation"]
+    },
+    {
+      "id": "creative-agent",
+      "kind": "specialist",
+      "label": "Creative Agent",
+      "status": "active",
+      "version": "0.1.0",
+      "role": "image, design, visual, narrative, and creative concept support",
+      "capabilities": ["image_prompting", "image_generation_planning", "design_synthesis", "narrative_concepting", "creative_iteration"],
+      "allowed_memory_scopes": ["relationship_context:approved", "project_context:approved"],
+      "required_controls": ["identity", "policy", "evidence", "audit"]
+    }
+  ],
+  "non_claims": [
+    "This registry mirror records private-preview agent identity and authority boundaries only.",
+    "This registry mirror does not grant live credentials.",
+    "This registry mirror does not execute runtime tasks.",
+    "This registry mirror does not certify production autonomy.",
+    "This registry mirror does not replace Prophet Mesh runtime evidence, Model Router policy, Guardrail Fabric admission, or AgentPlane execution receipts."
+  ]
+}
