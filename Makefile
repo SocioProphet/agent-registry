@@ -49,7 +49,7 @@ validate-control-plane-capability-grant:
 	python3 tools/validate_control_plane_capability_grant.py
 
 validate-agent-wall-context:
-	python3 -m json.tool contracts/wallguard/agent-wall-context.v0.1.json >/dev/null
+	python3 -m json.tool contracts/wallguard/agent-wall-context.v0.1.schema.json >/dev/null
 	python3 -m json.tool contracts/wallguard/agent-wall-context.active.example.json >/dev/null
 	python3 -m json.tool contracts/wallguard/agent-wall-context.revoked-invalid.json >/dev/null
 	python3 -m json.tool contracts/wallguard/agent-wall-context.contaminated-global-invalid.json >/dev/null
