@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -71,6 +71,15 @@ validate-trust-chain-agent-manifest-binding:
 validate-prophet-mesh-choir-registry:
 	python3 -m json.tool contracts/prophet-mesh/prophet-mesh-choir-registry.v0.1.json >/dev/null
 	python3 tools/validate_prophet_mesh_choir_registry.py
+
+validate-agent-authority-authorize:
+	# allow: active + unchanged dimension exits 0
+	python3 tools/authorize.py check agent-registry://agent-alpha --action tool --state-file contracts/trustops/agent-authority-current-state.active.example.json >/dev/null
+	# fail-closed: revoked authority denies (nonzero) and never authorizes
+	! python3 tools/authorize.py check agent-registry://agent-alpha --action autonomous --state-file contracts/trustops/agent-authority-current-state.revoked.example.json >/dev/null
+	# fail-closed: an invalid (raw-receipt) state denies (nonzero)
+	! python3 tools/authorize.py check agent-registry://agent-alpha --action tool --state-file contracts/trustops/agent-authority-current-state.raw-receipt.invalid.json >/dev/null
+	python3 -m pytest -q tools/tests/test_authorize.py
 
 test:
 	python3 -m pytest -q tools/tests
