@@ -27,7 +27,7 @@ AGENT = "agent-registry://agent-alpha"
 
 EXIT_ALLOW = 0
 EXIT_DENY = 1
-EXIT_REVIEW = 2
+EXIT_REVIEW = 3  # deliberately not 2 (argparse reserves 2 for usage errors)
 
 
 def run(*args: str) -> tuple[int, dict]:
@@ -147,3 +147,18 @@ def test_unknown_action_denies() -> None:
     assert out["verdict"] == "deny"
     assert out["reason_code"] == "unknown_action"
     assert code == EXIT_DENY
+
+
+def test_argparse_usage_error_does_not_collide_with_review() -> None:
+    # A parse error must exit with argparse's own code (2), never the semantic
+    # require-review code (3) — so wrappers can't misread usage errors as a verdict.
+    proc = subprocess.run(
+        [sys.executable, str(AUTHORIZE), "check", AGENT],  # missing required --action
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    assert proc.returncode == 2
+    assert proc.returncode != EXIT_REVIEW

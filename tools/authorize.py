@@ -13,6 +13,9 @@ It is fail-closed by construction:
   * suspended or revoked authority_status -> deny regardless of dimension
   * any authorityEffect value it does not explicitly recognize -> deny
 
+Exit codes: 0 = allow, 3 = require-review, 1 = deny/error. 2 is deliberately
+unused so it stays distinct from argparse's usage-error exit code.
+
 It does not mutate authority, derive state from raw receipts, grant live
 credentials, or replace runtime/model/policy/guardrail/AgentPlane authorities.
 Those boundaries are inherited from authority_state_lookup and the TrustOps
@@ -63,9 +66,11 @@ ALLOW_VALUES = {"unchanged"}
 GLOBAL_DENY_STATUS = {"suspended", "revoked"}
 
 # Exit codes are fail-closed for shell/CI gating: only a clean allow exits 0.
+# NOTE: 2 is intentionally avoided — argparse exits 2 on usage/parse errors, so
+# reserving it keeps a parse error from being misread as an authorization verdict.
 EXIT_ALLOW = 0
 EXIT_DENY = 1
-EXIT_REVIEW = 2
+EXIT_REVIEW = 3
 
 
 def emit(payload: dict[str, Any]) -> None:

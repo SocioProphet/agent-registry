@@ -49,8 +49,10 @@ authorized state. Every failure mode denies — it never fails open:
 - agent / status mismatch on an explicit `--state-file` → `deny`
 - unrecognized action dimension → `deny` (`unknown_action`)
 
-Exit codes are fail-closed for shell/CI gating: `0` = allow, `2` =
-require-review, `1` = deny or error. Only a clean allow exits `0`.
+Exit codes are fail-closed for shell/CI gating: `0` = allow, `3` =
+require-review, `1` = deny or error. Only a clean allow exits `0`. Code `2` is
+deliberately unused: `argparse` exits `2` on usage/parse errors, so keeping it
+distinct prevents a wrapper from misreading a usage error as a review verdict.
 
 ## Usage
 

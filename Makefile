@@ -79,7 +79,9 @@ validate-agent-authority-authorize:
 	! python3 tools/authorize.py check agent-registry://agent-alpha --action autonomous --state-file contracts/trustops/agent-authority-current-state.revoked.example.json >/dev/null
 	# fail-closed: an invalid (raw-receipt) state denies (nonzero)
 	! python3 tools/authorize.py check agent-registry://agent-alpha --action tool --state-file contracts/trustops/agent-authority-current-state.raw-receipt.invalid.json >/dev/null
-	python3 -m pytest -q tools/tests/test_authorize.py
+	# NOTE: the pytest suite for this surface runs under `make test` (validate.yml
+	# installs pytest); this target stays stdlib-only so it also passes in the
+	# release-dry-run job, which runs `make validate` without pytest.
 
 test:
 	python3 -m pytest -q tools/tests
