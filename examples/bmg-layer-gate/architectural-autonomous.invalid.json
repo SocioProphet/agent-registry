@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-registry.bmg-layer-gate.v0.1",
+  "recordType": "BmgLayerGateDecision",
+  "decisionId": "bmg-2026-08-02-0003",
+  "subjectAgent": "agent://regis/proof@v1",
+  "actionId": "widen_capability_scope",
+  "layer": "architectural",
+  "effects": {
+    "mutatesManifest": true,
+    "altersPermissibleFutureActions": true
+  },
+  "autonomy": "autonomous",
+  "humanSignoff": null,
+  "policyRef": "policy://control-plane/bmg-1"
+}

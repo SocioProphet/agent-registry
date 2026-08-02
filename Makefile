@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -47,6 +47,14 @@ validate-control-plane-capability-grant:
 	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.schema.json >/dev/null
 	python3 -m json.tool contracts/control-plane/control-plane-capability-grant.v0.1.example.json >/dev/null
 	python3 tools/validate_control_plane_capability_grant.py
+
+validate-bmg-layer-gate:
+	python3 -m json.tool contracts/control-plane/bmg-layer-gate.v0.1.schema.json >/dev/null
+	python3 -m json.tool contracts/control-plane/bmg-layer-gate.v0.1.example.json >/dev/null
+	python3 -m json.tool examples/bmg-layer-gate/architectural-signed.example.json >/dev/null
+	python3 -m json.tool examples/bmg-layer-gate/architectural-autonomous.invalid.json >/dev/null
+	python3 -m json.tool examples/bmg-layer-gate/behavioural-alters-future.invalid.json >/dev/null
+	python3 tools/validate_bmg_layer_gate.py
 
 validate-agent-wall-context:
 	python3 -m json.tool contracts/wallguard/agent-wall-context.v0.1.schema.json >/dev/null
