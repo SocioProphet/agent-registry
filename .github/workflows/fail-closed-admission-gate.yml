@@ -1,0 +1,42 @@
+name: fail-closed-admission-gate
+
+on:
+  pull_request:
+    paths:
+      - "schemas/agent-admission-manifest.v0.1.schema.json"
+      - "agents/admissions/**"
+      - "examples/admission-gate/**"
+      - "tools/fail_closed_admission_gate.py"
+      - "tools/tests/test_fail_closed_admission_gate.py"
+      - ".github/workflows/fail-closed-admission-gate.yml"
+      - "Makefile"
+  push:
+    branches:
+      - main
+    paths:
+      - "schemas/agent-admission-manifest.v0.1.schema.json"
+      - "agents/admissions/**"
+      - "examples/admission-gate/**"
+      - "tools/fail_closed_admission_gate.py"
+      - "tools/tests/test_fail_closed_admission_gate.py"
+      - ".github/workflows/fail-closed-admission-gate.yml"
+      - "Makefile"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-fail-closed-admission-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate fail-closed admission gate (INV-ACC-1 teeth, both ways)
+        run: make validate-fail-closed-admission-gate
+      - name: Install test dependency
+        run: python3 -m pip install pytest
+      - name: Run gate tests
+        run: python3 -m pytest -q tools/tests/test_fail_closed_admission_gate.py

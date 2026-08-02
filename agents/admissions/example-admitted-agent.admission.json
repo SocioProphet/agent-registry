@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/example-admitted-agent",
+  "agent_ref": "agent-registry://example-admitted-agent",
+  "source": {
+    "repo": "agent-registry",
+    "path": "examples/agent-spec.example.json",
+    "kind": "agent-manifest"
+  },
+  "declared_capabilities": [
+    "model-route-read",
+    "summarize.text"
+  ],
+  "admission_status": "admitted",
+  "production_admitted": true,
+  "risk_class": "routine",
+  "authority": {
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/demo-analyst/model-route-read",
+      "policy://session/evidence-required",
+      "evidence://agent-registry/demo/agent-spec-001"
+    ],
+    "owner_repo": "SocioProphet/agent-registry",
+    "approval_required_from": "team://socioprophet/model-fabric",
+    "sign_off": {
+      "approver": "team://socioprophet/model-fabric",
+      "decision": "admitted",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/demo/admission-sign-off-001"
+    }
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "non_claims": [
+    "This is a benign example fixture used to prove the gate's admitted (pass) path.",
+    "It grants only read-evaluate model-route authority already warranted by the demo tool grant."
+  ],
+  "notes": "Reference admitted agent. Demonstrates that a capability-bearing agent WITH a resolvable, granted admission entry passes the fail-closed gate (exit 0)."
+}

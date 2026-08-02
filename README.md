@@ -54,8 +54,25 @@ Trust Chain-specific validation:
 make validate-trust-chain-agent-manifest-binding
 ```
 
+## Fail-closed admission gate (INV-ACC-1 — no invisible authority)
+
+Standard 030 invariant **INV-ACC-1**: an agent that declares capabilities MUST
+resolve to a registry admission entry. Capability without admission = denied.
+`tools/fail_closed_admission_gate.py` enforces it, gating a declared-capability
+record against `agents/admissions/*.admission.json`
+(`schemas/agent-admission-manifest.v0.1.schema.json`): a granted admission passes
+(exit 0); a `proposed` stub is review-required (exit 3, never auto-authorized);
+capability with no admission entry is denied (exit 1). See
+`docs/fail-closed-admission-gate.md` and `agents/admissions/README.md`.
+
+```bash
+make validate-fail-closed-admission-gate
+python3 -m pytest -q tools/tests/test_fail_closed_admission_gate.py
+```
+
 ## Invariants
 
+- No invisible authority: a capability-bearing agent with no resolvable admission entry is denied (INV-ACC-1).
 - No broad tool rights by default.
 - No production agent execution without runtime, model, tool, policy, guardrail, and AgentPlane evidence.
 - No production authority when the agent is reduced, suspended, or revoked.

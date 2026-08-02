@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "splunk-mcp-server",
+  "source": {
+    "repo": "SCOPE-D",
+    "path": "mcp.json",
+    "kind": "mcp-server"
+  },
+  "declared_capabilities": [
+    "cmd:bash",
+    "cmd:npx"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "scope-attack-paths",
+  "source": {
+    "repo": "SCOPE-D",
+    "path": "agents/subagents/scope-attack-paths.md",
+    "kind": "claude-subagent"
+  },
+  "declared_capabilities": [
+    "Bash",
+    "Read",
+    "Glob",
+    "Grep"
+  ],
+  "admission_status": "proposed",
+  "production_admitted": false,
+  "risk_class": "destructive-offensive",
+  "authority": {
+    "granted": false,
+    "authority_refs": [],
+    "owner_repo": "SocioProphet/SCOPE-D",
+    "approval_required_from": "SocioProphet/SCOPE-D agent owner",
+    "sign_off": null
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "non_claims": [
+    "PROPOSED admission stub. This does NOT grant authority.",
+    "authority.granted is false and authority_refs is empty pending human owner sign-off.",
+    "Created by the INV-ACC-1 remediation to make invisible authority VISIBLE, not to authorize it."
+  ],
+  "notes": "WHY FLAGGED: Attack-path enumeration subagent with Bash and no governing authority ref. Making it visible satisfies 'no invisible authority' but the gate holds it at review-required (exit 3) until SocioProphet/SCOPE-D signs off (admission_status=admitted, authority.granted=true, authority_refs populated)."
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "agent:shell-001",
+  "source": {
+    "repo": "agent_descriptors",
+    "path": "avro/shell.json",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "exec.command",
+    "fs.read",
+    "fs.write"
+  ]
+}
