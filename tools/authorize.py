@@ -43,11 +43,14 @@ from pathlib import Path
 from typing import Any
 
 import authority_state_lookup as lookup
+import containment
 import fail_closed_admission_gate as admission
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE_DIR = ROOT / "contracts" / "trustops"
 DEFAULT_ADMISSIONS_DIR = ROOT / "agents" / "admissions"
+DEFAULT_GOVERNANCE_DIR = containment.DEFAULT_GOVERNANCE_DIR
+DESTRUCTIVE_RISK_CLASS = "destructive-offensive"
 
 NON_GOALS = [
     "authority_mutation",
@@ -175,6 +178,8 @@ def authorize(
     state_file: str | None = None,
     status: str | None = None,
     admissions_dir: Path = DEFAULT_ADMISSIONS_DIR,
+    governance_dir: Path = DEFAULT_GOVERNANCE_DIR,
+    context: dict[str, Any] | None = None,
     enforce_admission: bool = True,
 ) -> dict[str, Any]:
     """Resolve current authority state and return an authorize decision.
@@ -206,7 +211,9 @@ def authorize(
     # ---- Gate 1: INV-ACC-1 admission (no invisible authority) -------------- #
     admission_view: dict[str, Any] | None = None
     if enforce_admission:
-        adm = admission.resolve_admission_for_ref(agent_ref, Path(admissions_dir))
+        adm = admission.resolve_admission_for_ref(
+            agent_ref, Path(admissions_dir), Path(governance_dir)
+        )
         admission_view = _admission_summary(adm)
         if adm["verdict"] != "admitted":
             # Not admitted -> the agent has no runtime authority to evaluate.
@@ -225,6 +232,37 @@ def authorize(
                 source_state_hash=None,
                 admission=admission_view,
             )
+
+        # ---- Gate 1.5: CONTAINMENT for the destructive/offensive class ------ #
+        # An admitted destructive/offensive agent is authorized ONLY when its
+        # containment ref resolves to a REAL policy file AND that policy's
+        # conditions are satisfied by the action context (deny-by-default).
+        # This is what makes admission "governed, not omnipotent": a nominal
+        # containment string cannot pass, and a satisfied real policy must.
+        manifest = admission.load_manifest_for_ref(agent_ref, Path(admissions_dir))
+        if manifest is not None and manifest.get("risk_class") == DESTRUCTIVE_RISK_CLASS:
+            crefs = containment.containment_refs(manifest)
+            cdecision = containment.gate(crefs, context or {}, Path(governance_dir))
+            admission_view["containment"] = {
+                "required": True,
+                "allowed": cdecision["allowed"],
+                "reason_code": cdecision["reason_code"],
+                "resolved_policies": cdecision["resolved_policies"],
+                "unmet": cdecision["unmet"],
+            }
+            if not cdecision["allowed"]:
+                return _decision(
+                    verdict="deny",
+                    reason_code=cdecision["reason_code"],
+                    agent_ref=agent_ref,
+                    action=action,
+                    effect_key=ACTION_EFFECT[action],
+                    effect_value=None,
+                    authority_status=None,
+                    evidence_refs=list(adm.get("authority_refs", [])),
+                    source_state_hash=None,
+                    admission=admission_view,
+                )
 
     # ---- Gate 2: authority state governs the specific action dimension ----- #
     # Resolve validated current state via the read-only lookup helper.
@@ -316,6 +354,28 @@ def authorize(
     )
 
 
+def _context_from_args(args: argparse.Namespace) -> dict[str, Any]:
+    """Build the action context that containment conditions are evaluated against.
+
+    Deny-by-default: any flag left unset is absent from the context, so a policy
+    that requires it treats it as UNMET.
+    """
+    context: dict[str, Any] = {}
+    if args.env is not None:
+        context["environment"] = args.env
+    if args.sandbox:
+        context["sandbox"] = True
+    if args.human_in_loop:
+        context["human_in_loop"] = True
+    if args.read_only:
+        context["read_only"] = True
+    if args.quorum_approvers is not None:
+        context["quorum_approvers"] = args.quorum_approvers
+    if args.namespace_scope is not None:
+        context["namespace_scope"] = args.namespace_scope
+    return context
+
+
 def command_authorize(args: argparse.Namespace) -> int:
     decision = authorize(
         args.agent_ref,
@@ -324,6 +384,8 @@ def command_authorize(args: argparse.Namespace) -> int:
         state_file=args.state_file,
         status=args.status,
         admissions_dir=Path(args.admissions_dir),
+        governance_dir=Path(args.governance_dir),
+        context=_context_from_args(args),
     )
     emit(decision)
     return {"allow": EXIT_ALLOW, "require-review": EXIT_REVIEW, "deny": EXIT_DENY}[decision["verdict"]]
@@ -354,6 +416,20 @@ def build_parser() -> argparse.ArgumentParser:
         "always enforced by this surface: an agent with no resolvable, granted "
         "admission entry here is denied. There is deliberately no bypass flag.",
     )
+    authz.add_argument(
+        "--governance-dir",
+        default=str(DEFAULT_GOVERNANCE_DIR),
+        help="Governance root (containment/ + owner-signoffs/). For the "
+        "destructive/offensive class, the named containment policy must resolve "
+        "here AND its conditions must be satisfied, or the action is denied.",
+    )
+    # ---- action context the containment conditions are evaluated against ---- #
+    authz.add_argument("--env", help="Execution environment (e.g. dev/staging/sandbox/prod).")
+    authz.add_argument("--sandbox", action="store_true", help="Action runs inside an isolated sandbox.")
+    authz.add_argument("--human-in-loop", action="store_true", help="A human is in the approval loop.")
+    authz.add_argument("--read-only", action="store_true", help="Action is read-only (no mutation).")
+    authz.add_argument("--quorum-approvers", type=int, help="Number of approvers in the quorum.")
+    authz.add_argument("--namespace-scope", help="Namespace reach of the action (e.g. single/cross).")
     authz.set_defaults(func=command_authorize)
 
     return parser

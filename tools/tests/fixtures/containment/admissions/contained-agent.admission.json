@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/contained-agent",
+  "agent_ref": "agent-registry://contained-agent",
+  "source": {
+    "repo": "agent-registry",
+    "path": "tools/tests/fixtures/containment",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "kill.agent",
+    "exec.command"
+  ],
+  "admission_status": "admitted",
+  "production_admitted": true,
+  "risk_class": "destructive-offensive",
+  "authority": {
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/contained-agent/destructive",
+      "policy://containment/test-contain-sandbox-v0.1",
+      "policy://trustops/agent-authority-v0.1"
+    ],
+    "owner_repo": "SocioProphet/agent-registry",
+    "approval_required_from": "team://socioprophet/trustops",
+    "sign_off": {
+      "approver": "team://socioprophet/trustops",
+      "decision": "admitted",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/test/contained-agent-sign-off",
+      "containment_ref": "policy://containment/test-contain-sandbox-v0.1"
+    }
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "notes": "Hermetic runtime-test fixture: an ADMITTED destructive/offensive agent whose containment ref resolves to fixtures/containment/governance/containment/test-contain-sandbox-v0.1.json. Proves the runtime containment gate allows only when the real policy resolves AND its conditions are satisfied."
+}

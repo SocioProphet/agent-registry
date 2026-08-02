@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "agent-registry.containment-policy.v0.1",
+  "recordType": "ContainmentPolicy",
+  "policy_ref": "policy://containment/test-contain-sandbox-v0.1",
+  "title": "Hermetic test containment (sandbox + human-in-loop)",
+  "description": "Fixture policy: the destructive fixture agent runs only in a non-production sandbox, under human-in-the-loop, within a single namespace.",
+  "governs_capabilities": [
+    "kill.agent",
+    "exec.command"
+  ],
+  "default_effect": "deny",
+  "denied_environments": [
+    "prod",
+    "production"
+  ],
+  "required_conditions": {
+    "environment_in": [
+      "dev",
+      "staging",
+      "sandbox"
+    ],
+    "require_sandbox": true,
+    "require_human_in_loop": true,
+    "namespace_scope_in": [
+      "single"
+    ]
+  },
+  "enforcement": "deny-by-default",
+  "owner_repo": "SocioProphet/agent-registry",
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030"
+}

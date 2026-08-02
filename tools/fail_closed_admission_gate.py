@@ -46,9 +46,14 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import containment
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ADMISSIONS_DIR = ROOT / "agents" / "admissions"
+DEFAULT_GOVERNANCE_DIR = containment.DEFAULT_GOVERNANCE_DIR
 ADMISSION_SCHEMA = ROOT / "schemas" / "agent-admission-manifest.v0.1.schema.json"
+
+DESTRUCTIVE_RISK_CLASS = "destructive-offensive"
 
 DECLARED_RECORD_TYPE = "DeclaredCapabilityRecord"
 ADMISSION_RECORD_TYPE = "AgentAdmissionManifest"
@@ -234,7 +239,11 @@ def _decision(
     }
 
 
-def evaluate_declared(record: dict[str, Any], index: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def evaluate_declared(
+    record: dict[str, Any],
+    index: dict[str, dict[str, Any]],
+    governance_dir: Path = DEFAULT_GOVERNANCE_DIR,
+) -> dict[str, Any]:
     """Return a fail-closed admission decision for one DeclaredCapabilityRecord."""
     if not isinstance(record, dict) or record.get("recordType") != DECLARED_RECORD_TYPE:
         raise GateError("declared_malformed", f"not a {DECLARED_RECORD_TYPE}")
@@ -297,6 +306,34 @@ def evaluate_declared(record: dict[str, Any], index: dict[str, dict[str, Any]]) 
                 authority_granted=granted,
                 authority_refs=refs,
             )
+        # INV-ACC-1 for the destructive/offensive class: authority.granted=true
+        # is legitimate only when its containment ref resolves to a REAL policy
+        # file. A destructive agent with no containment ref, or one whose
+        # containment ref does not resolve, is fail-closed DENIED here -- so a
+        # nominal "policy://containment/..." string can never pass as governed.
+        if admission.get("risk_class") == DESTRUCTIVE_RISK_CLASS:
+            crefs = containment.containment_refs(admission)
+            if not crefs:
+                return _decision(
+                    verdict="deny",
+                    reason_code="destructive_without_containment_ref",
+                    agent_id=agent_id,
+                    declared_capabilities=caps,
+                    admission_status=status,
+                    authority_granted=granted,
+                    authority_refs=refs,
+                )
+            unresolved = [c for c in crefs if not containment.policy_file_exists(c, governance_dir)]
+            if unresolved:
+                return _decision(
+                    verdict="deny",
+                    reason_code="containment_policy_unresolved",
+                    agent_id=agent_id,
+                    declared_capabilities=caps,
+                    admission_status=status,
+                    authority_granted=granted,
+                    authority_refs=refs,
+                )
         return _decision(
             verdict="admitted",
             reason_code="admitted_with_authority",
@@ -366,7 +403,25 @@ def find_admission_by_ref(index: dict[str, dict[str, Any]], agent_ref: str) -> d
     return hits[0]
 
 
-def resolve_admission_for_ref(agent_ref: str, admissions_dir: Path) -> dict[str, Any]:
+def load_manifest_for_ref(agent_ref: str, admissions_dir: Path) -> dict[str, Any] | None:
+    """Return the resolved admission manifest for a runtime ref, or None.
+
+    Fail-closed: an unreadable/ambiguous index resolves to None so the caller
+    denies. Used by the runtime authorize surface to read the manifest's
+    risk_class + containment refs after admission passes.
+    """
+    try:
+        index = build_admission_index(admissions_dir)
+    except GateError:
+        return None
+    return find_admission_by_ref(index, agent_ref)
+
+
+def resolve_admission_for_ref(
+    agent_ref: str,
+    admissions_dir: Path,
+    governance_dir: Path = DEFAULT_GOVERNANCE_DIR,
+) -> dict[str, Any]:
     """Fail-closed admission decision for a runtime agent ref (INV-ACC-1).
 
     Wraps ``build_admission_index`` + ``evaluate_declared`` so the RUNTIME
@@ -402,7 +457,7 @@ def resolve_admission_for_ref(agent_ref: str, admissions_dir: Path) -> dict[str,
         "declared_capabilities": manifest.get("declared_capabilities", []),
     }
     try:
-        decision = evaluate_declared(declared, index)
+        decision = evaluate_declared(declared, index, governance_dir)
     except GateError as exc:
         return _deny_from_error(exc, agent_ref)
     # Preserve the runtime-facing identity in the decision surfaced to callers.
@@ -419,10 +474,11 @@ def emit(payload: dict[str, Any]) -> None:
 
 
 def command_check(args: argparse.Namespace) -> int:
+    governance_dir = Path(args.governance_dir)
     try:
         index = build_admission_index(Path(args.admissions_dir))
         record = _load_json(Path(args.declared_file))
-        decision = evaluate_declared(record, index)
+        decision = evaluate_declared(record, index, governance_dir)
     except GateError as exc:
         decision = _deny_from_error(exc)
     emit(decision)
@@ -438,6 +494,7 @@ def command_scan(args: argparse.Namespace) -> int:
     so the substrate (admission manifests, this checker) is never gated.
     """
     declared_dir = Path(args.declared_dir)
+    governance_dir = Path(args.governance_dir)
     try:
         index = build_admission_index(Path(args.admissions_dir))
     except GateError as exc:
@@ -454,7 +511,7 @@ def command_scan(args: argparse.Namespace) -> int:
                 skipped.append(path.name)  # self-exclusion: not an agent under test
                 continue
             try:
-                decision = evaluate_declared(item, index)
+                decision = evaluate_declared(item, index, governance_dir)
             except GateError as exc:
                 decision = _deny_from_error(exc, str(item.get("agent_id", "unknown")))
             decision["_source_file"] = path.name
@@ -510,11 +567,18 @@ def build_parser() -> argparse.ArgumentParser:
     check = sub.add_parser("check", help="Gate one DeclaredCapabilityRecord against the admissions index.")
     check.add_argument("declared_file")
     check.add_argument("--admissions-dir", default=str(DEFAULT_ADMISSIONS_DIR))
+    check.add_argument(
+        "--governance-dir",
+        default=str(DEFAULT_GOVERNANCE_DIR),
+        help="Governance root (containment/ + owner-signoffs/). A destructive/offensive "
+        "admission whose containment policy file does not resolve here is denied.",
+    )
     check.set_defaults(func=command_check)
 
     scan = sub.add_parser("scan", help="Gate a directory of declared records; aggregate worst-case verdict.")
     scan.add_argument("declared_dir")
     scan.add_argument("--admissions-dir", default=str(DEFAULT_ADMISSIONS_DIR))
+    scan.add_argument("--governance-dir", default=str(DEFAULT_GOVERNANCE_DIR))
     scan.set_defaults(func=command_scan)
 
     return parser

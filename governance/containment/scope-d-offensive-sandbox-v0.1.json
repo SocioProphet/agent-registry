@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "agent-registry.containment-policy.v0.1",
+  "recordType": "ContainmentPolicy",
+  "policy_ref": "policy://containment/scope-d-offensive-sandbox-v0.1",
+  "title": "SCOPE-D cloud enumeration / recon containment (read-only sandbox)",
+  "description": "Bounds the SCOPE-D enumeration and attack-path recon subagents (IAM/KMS/Secrets/STS enum, attack-path mapping) that hold Bash over privileged cloud identity/key/secret surfaces. Deny-by-default: recon runs ONLY in a non-production sandbox, read-only, within a single namespace.",
+  "governs_capabilities": [
+    "Bash",
+    "Read",
+    "Glob",
+    "Grep"
+  ],
+  "default_effect": "deny",
+  "denied_environments": [
+    "prod",
+    "production"
+  ],
+  "required_conditions": {
+    "environment_in": [
+      "dev",
+      "staging",
+      "sandbox"
+    ],
+    "require_sandbox": true,
+    "require_read_only": true,
+    "namespace_scope_in": [
+      "single"
+    ]
+  },
+  "enforcement": "deny-by-default: tools/authorize.py DENIES the action unless every required_condition is satisfied by the action context and this policy file resolves. A missing context value for a required condition is treated as unmet (fail-closed).",
+  "owner_repo": "SocioProphet/SCOPE-D",
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "signoff_ref": "governance/owner-signoffs/2026-08-02-agent-admissions.json",
+  "gap_refs": [
+    "SocioProphet/agent-registry#53",
+    "SocioProphet/agent-registry#54",
+    "SocioProphet/agent-registry#55"
+  ]
+}

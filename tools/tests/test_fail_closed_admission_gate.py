@@ -99,10 +99,29 @@ def test_owner_approved_destructive_subset_is_admitted_and_contained(stem: str) 
     assert any(ref.startswith("policy://containment/") for ref in out["authority_refs"])
     # the owner sign-off evidence is recorded among the warranting refs.
     assert (
-        "evidence://agent-registry/owner-signoff/2026-08-02-lord-michael-approval"
+        "evidence://agent-registry/owner-signoff/2026-08-02-agent-admissions"
         in out["authority_refs"]
     )
     assert code == EXIT_ADMITTED
+
+
+def test_admitted_destructive_agent_denied_when_containment_policy_absent(tmp_path: Path) -> None:
+    # Point the gate at an EMPTY governance dir: the admitted governor-001's
+    # containment ref no longer resolves to a real policy file, so the static
+    # gate fail-closes to DENY. A nominal containment string cannot pass.
+    empty_gov = tmp_path / "governance"
+    (empty_gov / "containment").mkdir(parents=True)
+    code, out = run(
+        "check",
+        str(DECLARED / "agent-governor-001.declared.json"),
+        "--admissions-dir",
+        str(ADMISSIONS),
+        "--governance-dir",
+        str(empty_gov),
+    )
+    assert out["verdict"] == "deny"
+    assert out["reason_code"] == "containment_policy_unresolved"
+    assert code == EXIT_DENY
 
 
 # ---- fail-closed on every malformed / unresolvable input -------------------

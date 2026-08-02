@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate validate-containment-policies
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate validate-containment-policies
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -118,8 +118,22 @@ validate-fail-closed-admission-gate:
 	# the owner-approved priority population now scans clean (admitted, exit 0); the fail-closed teeth above
 	# (unadmitted-capability-agent) prove an UNADMITTED agent is still denied.
 	python3 tools/fail_closed_admission_gate.py scan examples/admission-gate/declared >/dev/null
+	# fail-closed CONTAINMENT: point the gate at an EMPTY governance dir -> the admitted
+	# destructive governor-001's containment ref no longer resolves -> DENY (nonzero).
+	# A nominal "policy://containment/..." string cannot pass as governed.
+	! python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/agent-governor-001.declared.json --governance-dir /nonexistent-governance >/dev/null
 	# NOTE: the pytest suite for this surface runs under `make test`; this target
 	# stays stdlib-only so it also passes in the release-dry-run job (no pytest).
+
+validate-containment-policies:
+	# Every containment policy + owner sign-off record validates against schema,
+	# and every admitted destructive/offensive admission's containment + evidence
+	# refs round-trip to REAL files (INV-ACC-1: no nominal-only containment).
+	python3 -m json.tool schemas/containment-policy.v0.1.schema.json >/dev/null
+	python3 -m json.tool schemas/owner-signoff.v0.1.schema.json >/dev/null
+	for f in governance/containment/*.json; do python3 -m json.tool "$$f" >/dev/null; done
+	for f in governance/owner-signoffs/*.json; do python3 -m json.tool "$$f" >/dev/null; done
+	python3 tools/validate_containment_policies.py
 
 test:
 	python3 -m pytest -q tools/tests

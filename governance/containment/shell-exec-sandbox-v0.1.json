@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "agent-registry.containment-policy.v0.1",
+  "recordType": "ContainmentPolicy",
+  "policy_ref": "policy://containment/shell-exec-sandbox-v0.1",
+  "title": "exec.command / fs.write containment (sandbox + human-in-loop)",
+  "description": "Bounds the shell agent's arbitrary command execution and filesystem write. Deny-by-default: exec.command / fs.write run ONLY in a non-production sandbox, under human-in-the-loop, within a single namespace.",
+  "governs_capabilities": [
+    "exec.command",
+    "fs.read",
+    "fs.write"
+  ],
+  "default_effect": "deny",
+  "denied_environments": [
+    "prod",
+    "production"
+  ],
+  "required_conditions": {
+    "environment_in": [
+      "dev",
+      "staging",
+      "sandbox"
+    ],
+    "require_sandbox": true,
+    "require_human_in_loop": true,
+    "namespace_scope_in": [
+      "single"
+    ]
+  },
+  "enforcement": "deny-by-default: tools/authorize.py DENIES the action unless every required_condition is satisfied by the action context and this policy file resolves. A missing context value for a required condition is treated as unmet (fail-closed).",
+  "owner_repo": "SocioProphet/agent_descriptors",
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "signoff_ref": "governance/owner-signoffs/2026-08-02-agent-admissions.json",
+  "gap_refs": [
+    "SocioProphet/agent-registry#53",
+    "SocioProphet/agent-registry#54",
+    "SocioProphet/agent-registry#55"
+  ]
+}
