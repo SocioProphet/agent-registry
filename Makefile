@@ -109,11 +109,15 @@ validate-fail-closed-admission-gate:
 	# pass: a capability-bearing agent WITH a resolvable, granted admission entry.
 	python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/example-admitted-agent.declared.json >/dev/null
 	# fail-closed: capability declared with NO admission entry denies (nonzero) -> invisible authority.
+	# This is the permanent negative teeth: a still-unadmitted agent is ALWAYS denied.
 	! python3 tools/fail_closed_admission_gate.py check examples/admission-gate/unadmitted-capability-agent.invalid.json >/dev/null
-	# fail-closed: a PROPOSED dangerous stub is review-required, never auto-authorized (nonzero).
-	! python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/agent-governor-001.declared.json >/dev/null
-	# fail-closed: scanning the priority population holds every proposed/unadmitted agent below admitted (nonzero).
-	! python3 tools/fail_closed_admission_gate.py scan examples/admission-gate/declared >/dev/null
+	# owner-signed-off: the destructive governor-001 (kill.agent) admission now resolves to admitted (exit 0).
+	# It was held at review-required until Lord Michael signed off (SocioProphet/agent-registry#55); admission
+	# makes it VISIBLE + admitted and governed by a containment ref -- the per-action authority gate still applies.
+	python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/agent-governor-001.declared.json >/dev/null
+	# the owner-approved priority population now scans clean (admitted, exit 0); the fail-closed teeth above
+	# (unadmitted-capability-agent) prove an UNADMITTED agent is still denied.
+	python3 tools/fail_closed_admission_gate.py scan examples/admission-gate/declared >/dev/null
 	# NOTE: the pytest suite for this surface runs under `make test`; this target
 	# stays stdlib-only so it also passes in the release-dry-run job (no pytest).
 
