@@ -55,6 +55,24 @@ def test_missing_signoff_on_architectural_is_rejected() -> None:
         validate_record(rec)
 
 
+def test_unexpected_fields_are_rejected() -> None:
+    # Fail-closed parity with the schema's additionalProperties:false.
+    top = _load("architectural-signed.example.json")
+    top["surpriseField"] = "nope"
+    with pytest.raises(ValidationError):
+        validate_record(top)
+
+    nested = _load("architectural-signed.example.json")
+    nested["effects"]["surprise"] = True
+    with pytest.raises(ValidationError):
+        validate_record(nested)
+
+    so = _load("architectural-signed.example.json")
+    so["humanSignoff"]["surprise"] = "x"
+    with pytest.raises(ValidationError):
+        validate_record(so)
+
+
 def test_invalid_fixtures_are_named_invalid() -> None:
     # Guardrail: every *.invalid.json under the example dir must actually be rejected.
     invalid = sorted(EXAMPLES.glob("*.invalid.json"))

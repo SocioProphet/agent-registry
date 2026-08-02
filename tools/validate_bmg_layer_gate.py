@@ -89,6 +89,11 @@ def validate_record(record: dict[str, Any]) -> None:
     missing = sorted(REQUIRED - set(record))
     if missing:
         fail(f"record missing required fields: {missing}")
+    # Fail-closed: mirror the schema's additionalProperties:false. All top-level
+    # fields are required, so any key outside REQUIRED is unexpected.
+    extra = sorted(set(record) - REQUIRED)
+    if extra:
+        fail(f"unexpected top-level fields: {extra}")
     if record["schemaVersion"] != SCHEMA_VERSION:
         fail("schemaVersion mismatch")
     if record["recordType"] != RECORD_TYPE:
@@ -110,6 +115,9 @@ def validate_record(record: dict[str, Any]) -> None:
     effects = record.get("effects")
     if not isinstance(effects, dict):
         fail("effects must be an object")
+    extra_effects = sorted(set(effects) - {"mutatesManifest", "altersPermissibleFutureActions"})
+    if extra_effects:
+        fail(f"unexpected fields in effects: {extra_effects}")
     mutates = need_bool(effects, "mutatesManifest")
     alters = need_bool(effects, "altersPermissibleFutureActions")
 
@@ -117,6 +125,9 @@ def validate_record(record: dict[str, Any]) -> None:
     if signoff is not None:
         if not isinstance(signoff, dict):
             fail("humanSignoff must be an object or null")
+        extra_signoff = sorted(set(signoff) - {"signer", "signedAt", "capabilityDelta"})
+        if extra_signoff:
+            fail(f"unexpected fields in humanSignoff: {extra_signoff}")
         need_str(signoff, "signer")
         need_str(signoff, "signedAt")
         need_str(signoff, "capabilityDelta")
