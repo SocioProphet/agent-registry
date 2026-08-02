@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.ai/agent-registry/contracts/control-plane/bmg-layer-gate.v0.1.schema.json",
+  "title": "BmgLayerGateDecision",
+  "description": "BMG-1 (SP-ARCH-002 D5): every agent action is classified Layer-1 (behavioural, autonomous within manifest) or Layer-2 (architectural, mutates the manifest / the set of permissible future actions, always human-gated). Any action that alters the set of permissible future actions is Layer-2. Layer-2 is never autonomous.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "decisionId",
+    "subjectAgent",
+    "actionId",
+    "layer",
+    "effects",
+    "autonomy",
+    "humanSignoff",
+    "policyRef"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "agent-registry.bmg-layer-gate.v0.1" },
+    "recordType": { "const": "BmgLayerGateDecision" },
+    "decisionId": { "type": "string", "minLength": 1 },
+    "subjectAgent": { "type": "string", "pattern": "^agent://" },
+    "actionId": { "type": "string", "minLength": 1 },
+    "layer": { "enum": ["behavioural", "architectural"] },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mutatesManifest", "altersPermissibleFutureActions"],
+      "properties": {
+        "mutatesManifest": { "type": "boolean" },
+        "altersPermissibleFutureActions": { "type": "boolean" }
+      }
+    },
+    "autonomy": { "enum": ["autonomous", "human_gated"] },
+    "humanSignoff": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["signer", "signedAt", "capabilityDelta"],
+          "properties": {
+            "signer": { "type": "string", "minLength": 1 },
+            "signedAt": { "type": "string", "minLength": 1 },
+            "capabilityDelta": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "policyRef": { "type": "string", "minLength": 1 }
+  }
+}

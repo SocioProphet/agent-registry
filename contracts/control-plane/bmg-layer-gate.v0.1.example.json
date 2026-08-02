@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-registry.bmg-layer-gate.v0.1",
+  "recordType": "BmgLayerGateDecision",
+  "decisionId": "bmg-2026-08-02-0001",
+  "subjectAgent": "agent://noetica/summarizer@v1",
+  "actionId": "summarize_document",
+  "layer": "behavioural",
+  "effects": {
+    "mutatesManifest": false,
+    "altersPermissibleFutureActions": false
+  },
+  "autonomy": "autonomous",
+  "humanSignoff": null,
+  "policyRef": "policy://control-plane/bmg-1"
+}

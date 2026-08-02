@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "agent-registry.bmg-layer-gate.v0.1",
+  "recordType": "BmgLayerGateDecision",
+  "decisionId": "bmg-2026-08-02-0002",
+  "subjectAgent": "agent://regis/proof@v1",
+  "actionId": "widen_capability_scope",
+  "layer": "architectural",
+  "effects": {
+    "mutatesManifest": true,
+    "altersPermissibleFutureActions": true
+  },
+  "autonomy": "human_gated",
+  "humanSignoff": {
+    "signer": "operator://mdheller",
+    "signedAt": "2026-08-02T18:15:00Z",
+    "capabilityDelta": "grant regis/proof read access to contracts/orggov/*"
+  },
+  "policyRef": "policy://control-plane/bmg-1"
+}
