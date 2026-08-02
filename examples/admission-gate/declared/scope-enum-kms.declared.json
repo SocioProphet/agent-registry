@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "scope-enum-kms",
+  "source": {
+    "repo": "SCOPE-D",
+    "path": "agents/subagents/scope-enum-kms.md",
+    "kind": "claude-subagent"
+  },
+  "declared_capabilities": [
+    "Bash",
+    "Read",
+    "Glob",
+    "Grep"
+  ]
+}

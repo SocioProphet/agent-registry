@@ -1,6 +1,6 @@
-.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate
+.PHONY: validate validate-workspace-ops test release-dry-run ops-history-grants-validate validate-superconscious-reasoning-grant validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate
 
-validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate
+validate: ops-history-grants-validate validate-superconscious-reasoning-grant validate-workspace-ops validate-trustops-agent-authority-decision validate-authority-state-contracts validate-authority-state-lookup validate-workspace-context-authority-binding validate-control-plane-capability-grant validate-agent-wall-context validate-fraud-agent-admission-profile validate-trust-chain-agent-manifest-binding validate-prophet-mesh-choir-registry validate-agent-authority-authorize validate-bmg-layer-gate validate-fail-closed-admission-gate
 	python3 tools/validate_agent_registry_examples.py
 
 validate-workspace-ops:
@@ -90,6 +90,24 @@ validate-agent-authority-authorize:
 	# NOTE: the pytest suite for this surface runs under `make test` (validate.yml
 	# installs pytest); this target stays stdlib-only so it also passes in the
 	# release-dry-run job, which runs `make validate` without pytest.
+
+validate-fail-closed-admission-gate:
+	# Schemas and fixtures are well-formed JSON.
+	python3 -m json.tool schemas/agent-admission-manifest.v0.1.schema.json >/dev/null
+	python3 -m json.tool examples/admission-gate/unadmitted-capability-agent.invalid.json >/dev/null
+	for f in agents/admissions/*.admission.json; do python3 -m json.tool "$$f" >/dev/null; done
+	for f in examples/admission-gate/declared/*.json; do python3 -m json.tool "$$f" >/dev/null; done
+	# INV-ACC-1 teeth, both ways (Standard 030):
+	# pass: a capability-bearing agent WITH a resolvable, granted admission entry.
+	python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/example-admitted-agent.declared.json >/dev/null
+	# fail-closed: capability declared with NO admission entry denies (nonzero) -> invisible authority.
+	! python3 tools/fail_closed_admission_gate.py check examples/admission-gate/unadmitted-capability-agent.invalid.json >/dev/null
+	# fail-closed: a PROPOSED dangerous stub is review-required, never auto-authorized (nonzero).
+	! python3 tools/fail_closed_admission_gate.py check examples/admission-gate/declared/agent-governor-001.declared.json >/dev/null
+	# fail-closed: scanning the priority population holds every proposed/unadmitted agent below admitted (nonzero).
+	! python3 tools/fail_closed_admission_gate.py scan examples/admission-gate/declared >/dev/null
+	# NOTE: the pytest suite for this surface runs under `make test`; this target
+	# stays stdlib-only so it also passes in the release-dry-run job (no pytest).
 
 test:
 	python3 -m pytest -q tools/tests

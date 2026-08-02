@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent:governor-001",
+  "source": {
+    "repo": "agent_descriptors",
+    "path": "avro/governor.json",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "policy.evaluate",
+    "kill.agent",
+    "quorum.vote"
+  ],
+  "admission_status": "proposed",
+  "production_admitted": false,
+  "risk_class": "destructive-offensive",
+  "authority": {
+    "granted": false,
+    "authority_refs": [],
+    "owner_repo": "SocioProphet/agent_descriptors",
+    "approval_required_from": "SocioProphet/agent_descriptors agent owner",
+    "sign_off": null
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "non_claims": [
+    "PROPOSED admission stub. This does NOT grant authority.",
+    "authority.granted is false and authority_refs is empty pending human owner sign-off.",
+    "Created by the INV-ACC-1 remediation to make invisible authority VISIBLE, not to authorize it."
+  ],
+  "notes": "WHY FLAGGED: Declares kill.agent (terminate other agents), policy.evaluate, and quorum.vote with no owner, grant, or policy ref. Making it visible satisfies 'no invisible authority' but the gate holds it at review-required (exit 3) until SocioProphet/agent_descriptors signs off (admission_status=admitted, authority.granted=true, authority_refs populated)."
+}

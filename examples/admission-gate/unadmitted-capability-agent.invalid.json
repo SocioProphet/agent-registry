@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "agent:unadmitted-example-001",
+  "source": {
+    "repo": "example",
+    "path": "invisible-authority/unadmitted.json",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "exec.command",
+    "fs.write",
+    "kill.agent"
+  ]
+}

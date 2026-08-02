@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "agent:governor-001",
+  "source": {
+    "repo": "agent_descriptors",
+    "path": "avro/governor.json",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "policy.evaluate",
+    "kill.agent",
+    "quorum.vote"
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://socioprophet.dev/agent-registry/schemas/agent-admission-manifest.v0.1.schema.json",
+  "title": "AgentAdmissionManifest",
+  "description": "Registry admission entry that makes a capability-bearing agent's authority visible. Realizes INV-ACC-1 (no invisible authority) from socioprophet-agent-standards Standard 030: an agent that declares capabilities MUST have a resolvable admission entry. A `proposed` manifest makes the agent visible and tracked but grants NO authority until a human owner signs off (admission_status=admitted, authority.granted=true). This record does not grant live credentials or runtime authority by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "agent_id",
+    "declared_capabilities",
+    "admission_status",
+    "production_admitted",
+    "authority",
+    "invariant",
+    "standard_ref",
+    "gap_ref"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "agent-registry.agent-admission-manifest.v0.1"
+    },
+    "recordType": {
+      "const": "AgentAdmissionManifest"
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the agent being admitted, matching the declared-capability record's agent_id."
+    },
+    "agent_ref": {
+      "type": "string",
+      "description": "Optional agent-registry:// canonical ref."
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "path", "kind"],
+      "properties": {
+        "repo": { "type": "string" },
+        "path": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "agent-manifest",
+            "blueprint",
+            "claude-subagent",
+            "mcp-server",
+            "a2a-card",
+            "capability-decl",
+            "other"
+          ]
+        }
+      },
+      "description": "Where the agent's capability was declared in the estate (from ds.agents-manifests)."
+    },
+    "declared_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "The capabilities/tools/verbs the agent claims. Non-empty: an admission entry only exists because the agent bears capability."
+    },
+    "admission_status": {
+      "type": "string",
+      "enum": ["proposed", "admitted", "denied", "revoked"],
+      "description": "proposed = visible/tracked but NOT authorized; admitted = owner-signed-off and authorized; denied/revoked = fail-closed."
+    },
+    "production_admitted": {
+      "type": "boolean",
+      "description": "Must be false unless admission_status is admitted and authority.granted is true."
+    },
+    "risk_class": {
+      "type": "string",
+      "enum": ["routine", "sensitive", "destructive-offensive"],
+      "description": "Triage class. destructive-offensive covers kill.agent/policy.evaluate/quorum.vote/exec.command and cloud enum/exploit surfaces."
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["granted", "authority_refs", "owner_repo", "approval_required_from", "sign_off"],
+      "properties": {
+        "granted": {
+          "type": "boolean",
+          "description": "True only after a human owner authorizes. Proposed stubs are always false."
+        },
+        "authority_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Owner/grant/policy/control/evidence refs that warrant the capability. Left EMPTY in a proposed stub; the owner fills these on sign-off. This is the gap INV-ACC-1 closes."
+        },
+        "owner_repo": { "type": "string", "description": "Repo whose owner must sign off." },
+        "approval_required_from": {
+          "type": "string",
+          "description": "Who must approve before authority.granted may become true."
+        },
+        "sign_off": {
+          "type": ["object", "null"],
+          "description": "Null until signed. On sign-off carries approver identity, decision, and evidence ref.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "invariant": {
+      "const": "INV-ACC-1",
+      "description": "No invisible authority: capability without a resolvable admission entry is denied."
+    },
+    "standard_ref": {
+      "type": "string",
+      "description": "socioprophet-agent-standards Standard 030 reference."
+    },
+    "gap_ref": {
+      "type": "string",
+      "description": "Issue this remediation traces to (SocioProphet/agent-registry#53)."
+    },
+    "non_claims": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "description": "A proposed/denied/revoked manifest must not claim granted authority or production admission.",
+      "if": { "properties": { "admission_status": { "enum": ["proposed", "denied", "revoked"] } } },
+      "then": {
+        "properties": {
+          "production_admitted": { "const": false },
+          "authority": { "properties": { "granted": { "const": false } } }
+        }
+      }
+    }
+  ]
+}

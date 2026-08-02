@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "agent-registry.declared-capability-record.v0.1",
+  "recordType": "DeclaredCapabilityRecord",
+  "agent_id": "agent://socioprophet/example-admitted-agent",
+  "source": {
+    "repo": "agent-registry",
+    "path": "examples/agent-spec.example.json",
+    "kind": "agent-manifest"
+  },
+  "declared_capabilities": [
+    "model-route-read",
+    "summarize.text"
+  ]
+}
