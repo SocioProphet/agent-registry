@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/good-agent",
+  "agent_ref": "agent-registry://good-agent",
+  "source": {
+    "repo": "agent-registry",
+    "path": "tools/tests/fixtures/admission-runtime",
+    "kind": "agent-manifest"
+  },
+  "declared_capabilities": [
+    "tool-access"
+  ],
+  "admission_status": "admitted",
+  "production_admitted": true,
+  "risk_class": "routine",
+  "authority": {
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/good-agent/tool-access",
+      "policy://trustops/agent-authority-v0.1"
+    ],
+    "owner_repo": "SocioProphet/agent-registry",
+    "approval_required_from": "team://socioprophet/trustops",
+    "sign_off": {
+      "approver": "team://socioprophet/trustops",
+      "decision": "admitted",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/test/good-agent-sign-off"
+    }
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "notes": "Hermetic runtime-test fixture: an ADMITTED agent that pairs with states/good-agent.active.json to prove the authorize surface's admit path."
+}

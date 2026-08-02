@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "agent-registry.agent-authority-current-state.v0.1",
+  "recordType": "AgentAuthorityCurrentState",
+  "stateId": "agent-authority-current-state:ghost-agent:active",
+  "agentRef": "agent-registry://ghost-agent",
+  "computed_at": "2026-08-02T12:00:00Z",
+  "authority_status": "active",
+  "effective_decision_ref": "trustops-agent-authority-decision:ghost-agent-pass-001",
+  "source_decision_refs": [
+    "trustops-agent-authority-decision:ghost-agent-pass-001"
+  ],
+  "evidenceRefs": [
+    "trustops-receipt:ghost-agent-pass-001"
+  ],
+  "authorityEffects": {
+    "toolAccess": "unchanged",
+    "memoryAccess": "unchanged",
+    "autonomousExecution": "unchanged",
+    "routeEligibility": "unchanged",
+    "egressMode": "unchanged"
+  },
+  "restoration_required": false,
+  "receipt_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "labels": {
+    "fixture": "ghost-agent-active",
+    "note": "a fully valid, active authority state whose agent has NO admission entry -> invisible authority -> runtime deny"
+  }
+}

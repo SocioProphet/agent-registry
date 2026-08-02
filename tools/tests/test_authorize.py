@@ -120,9 +120,12 @@ def test_invalid_raw_receipt_state_denies_not_allows() -> None:
 
 
 def test_unknown_agent_denies() -> None:
+    # INV-ACC-1 admission is the first gate: an unknown agent has no admission
+    # entry, so it is denied for invisible authority before authority state is
+    # ever consulted. (Still a deny / exit 1 -- the fail-closed property holds.)
     code, out = check("agent-registry://does-not-exist", "tool")
     assert out["verdict"] == "deny"
-    assert out["reason_code"] == "authority_state_not_found"
+    assert out["reason_code"] == "invisible_authority_no_admission_entry"
     assert code == EXIT_DENY
 
 

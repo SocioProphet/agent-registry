@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/agent-alpha",
+  "agent_ref": "agent-registry://agent-alpha",
+  "source": {
+    "repo": "agent-registry",
+    "path": "contracts/trustops/agent-authority-current-state.active.example.json",
+    "kind": "agent-manifest"
+  },
+  "declared_capabilities": [
+    "tool-access",
+    "memory-access",
+    "autonomous-execution"
+  ],
+  "admission_status": "admitted",
+  "production_admitted": true,
+  "risk_class": "routine",
+  "authority": {
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/agent-alpha/tool-access",
+      "policy://trustops/agent-authority-v0.1",
+      "evidence://agent-registry/demo/agent-alpha-authority-state"
+    ],
+    "owner_repo": "SocioProphet/agent-registry",
+    "approval_required_from": "team://socioprophet/trustops",
+    "sign_off": {
+      "approver": "team://socioprophet/trustops",
+      "decision": "admitted",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/demo/agent-alpha-admission-sign-off"
+    }
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "non_claims": [
+    "Demo runtime agent fixture. agent-alpha is the canonical example agent behind the AgentAuthorityCurrentState fixtures and the authorize-surface tests.",
+    "Admission makes agent-alpha's authority VISIBLE so the runtime authorize gate (tools/authorize.py) can enforce INV-ACC-1; the authorityEffects state still governs each individual action dimension."
+  ],
+  "notes": "Admitted demo agent. Pairs with contracts/trustops/agent-authority-current-state.*.json so the runtime authorize surface enforces admission BEFORE evaluating authority effects (SocioProphet/agent-registry#54 runtime enforcement)."
+}

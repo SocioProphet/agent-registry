@@ -335,6 +335,82 @@ def _deny_from_error(exc: GateError, agent_id: str = "unknown") -> dict[str, Any
 
 
 # --------------------------------------------------------------------------- #
+# Runtime resolution by agent ref                                             #
+#                                                                             #
+# The CI `check`/`scan` commands gate DeclaredCapabilityRecord *files*. The   #
+# runtime authorize surface (tools/authorize.py) instead knows an agent only  #
+# by its canonical `agent-registry://` ref at request time. These helpers let #
+# that surface ask the SAME gate the same question -- "is this agent          #
+# admitted?" -- so INV-ACC-1 is enforced at admission time, not just in CI.   #
+# --------------------------------------------------------------------------- #
+
+def find_admission_by_ref(index: dict[str, dict[str, Any]], agent_ref: str) -> dict[str, Any] | None:
+    """Resolve the admission manifest for a runtime agent reference.
+
+    Admission manifests are keyed by ``agent_id`` but may carry an optional
+    canonical ``agent_ref``. The runtime authorize surface presents an
+    ``agent-registry://`` ref, so match on ``agent_ref`` first, then fall back
+    to ``agent_id``. Fail closed: a ref that resolves to zero OR more than one
+    manifest is unresolvable/ambiguous authority and returns ``None`` (the
+    caller denies).
+    """
+    if not agent_ref:
+        return None
+    hits = [
+        manifest
+        for manifest in index.values()
+        if manifest.get("agent_ref") == agent_ref or manifest.get("agent_id") == agent_ref
+    ]
+    if len(hits) != 1:
+        return None
+    return hits[0]
+
+
+def resolve_admission_for_ref(agent_ref: str, admissions_dir: Path) -> dict[str, Any]:
+    """Fail-closed admission decision for a runtime agent ref (INV-ACC-1).
+
+    Wraps ``build_admission_index`` + ``evaluate_declared`` so the RUNTIME
+    authorize path and the CI check/scan share ONE decision function -- the
+    runtime gate can never drift from what CI enforces. Any resolution failure
+    (unreadable/malformed index, unknown ref, ambiguous ref) -> deny. A capable
+    agent with no resolvable admission entry -> deny with reason
+    ``invisible_authority_no_admission_entry``.
+    """
+    try:
+        index = build_admission_index(admissions_dir)
+    except GateError as exc:
+        return _deny_from_error(exc, agent_ref)
+
+    manifest = find_admission_by_ref(index, agent_ref)
+    if manifest is None:
+        return _decision(
+            verdict="deny",
+            reason_code="invisible_authority_no_admission_entry",
+            agent_id=agent_ref,
+            declared_capabilities=[],
+            admission_status=None,
+            authority_granted=None,
+            authority_refs=[],
+        )
+
+    # Evaluate the resolved manifest through the exact same verdict logic CI
+    # uses: synthesize the agent's DeclaredCapabilityRecord from the manifest
+    # and gate it against the index it came from.
+    declared = {
+        "recordType": DECLARED_RECORD_TYPE,
+        "agent_id": manifest["agent_id"],
+        "declared_capabilities": manifest.get("declared_capabilities", []),
+    }
+    try:
+        decision = evaluate_declared(declared, index)
+    except GateError as exc:
+        return _deny_from_error(exc, agent_ref)
+    # Preserve the runtime-facing identity in the decision surfaced to callers.
+    decision["agent_ref"] = agent_ref
+    return decision
+
+
+# --------------------------------------------------------------------------- #
 # CLI                                                                          #
 # --------------------------------------------------------------------------- #
 

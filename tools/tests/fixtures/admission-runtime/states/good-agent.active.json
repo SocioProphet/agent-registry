@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "agent-registry.agent-authority-current-state.v0.1",
+  "recordType": "AgentAuthorityCurrentState",
+  "stateId": "agent-authority-current-state:good-agent:active",
+  "agentRef": "agent-registry://good-agent",
+  "computed_at": "2026-08-02T12:00:00Z",
+  "authority_status": "active",
+  "effective_decision_ref": "trustops-agent-authority-decision:good-agent-pass-001",
+  "source_decision_refs": [
+    "trustops-agent-authority-decision:good-agent-pass-001"
+  ],
+  "evidenceRefs": [
+    "trustops-receipt:good-agent-pass-001",
+    "policy://trustops/agent-authority-v0.1"
+  ],
+  "authorityEffects": {
+    "toolAccess": "unchanged",
+    "memoryAccess": "unchanged",
+    "autonomousExecution": "unchanged",
+    "routeEligibility": "unchanged",
+    "egressMode": "unchanged"
+  },
+  "restoration_required": false,
+  "receipt_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "labels": {
+    "fixture": "good-agent-active"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/agent-beta",
+  "agent_ref": "agent-registry://agent-beta",
+  "source": {
+    "repo": "agent-registry",
+    "path": "tools/tests/test_authorize.py",
+    "kind": "agent-manifest"
+  },
+  "declared_capabilities": [
+    "tool-access"
+  ],
+  "admission_status": "admitted",
+  "production_admitted": true,
+  "risk_class": "routine",
+  "authority": {
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/agent-beta/tool-access",
+      "policy://trustops/agent-authority-v0.1"
+    ],
+    "owner_repo": "SocioProphet/agent-registry",
+    "approval_required_from": "team://socioprophet/trustops",
+    "sign_off": {
+      "approver": "team://socioprophet/trustops",
+      "decision": "admitted",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/demo/agent-beta-admission-sign-off"
+    }
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "non_claims": [
+    "Demo runtime agent fixture. agent-beta is admitted so the authorize surface's agentRef-mismatch guard stays covered: an admitted agent-beta that presents agent-alpha's state file is denied for authority_state_agent_mismatch, not masked by the admission gate."
+  ],
+  "notes": "Admitted demo agent used only by the authorize-surface tests (SocioProphet/agent-registry#54 runtime enforcement)."
+}
