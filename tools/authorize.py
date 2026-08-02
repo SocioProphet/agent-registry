@@ -8,7 +8,17 @@ validated AgentAuthorityCurrentState (reusing the read-only
 authority_state_lookup helper) and returns an allow / require-review / deny
 decision plus a hashed receipt.
 
+INV-ACC-1 (Standard 030, "no invisible authority") is enforced HERE at runtime
+as the FIRST gate, not just in CI. Before any authority state is read, the agent
+must resolve to a registry admission entry (agents/admissions/) that is
+admitted+granted; this surface calls the same fail-closed admission gate that CI
+runs (`fail_closed_admission_gate.resolve_admission_for_ref`). A capability-
+bearing agent with no resolvable admission entry is denied with reason
+`invisible_authority_no_admission_entry`; a `proposed` (visible-but-unsigned)
+entry is held at require-review and never authorizes.
+
 It is fail-closed by construction:
+  * capability-bearing agent with no admission entry -> deny (INV-ACC-1)
   * unknown agent, missing state, invalid state, or ambiguous state -> deny
   * suspended or revoked authority_status -> deny regardless of dimension
   * any authorityEffect value it does not explicitly recognize -> deny
@@ -33,9 +43,11 @@ from pathlib import Path
 from typing import Any
 
 import authority_state_lookup as lookup
+import fail_closed_admission_gate as admission
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE_DIR = ROOT / "contracts" / "trustops"
+DEFAULT_ADMISSIONS_DIR = ROOT / "agents" / "admissions"
 
 NON_GOALS = [
     "authority_mutation",
@@ -104,6 +116,7 @@ def _decision(
     authority_status: str | None,
     evidence_refs: list[str],
     source_state_hash: str | None,
+    admission: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     decided_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     core = {
@@ -116,7 +129,7 @@ def _decision(
         "source_state_hash": source_state_hash,
         "decided_at": decided_at,
     }
-    return {
+    payload = {
         "schemaVersion": "agent-registry.agent-authority-authorize.v0.1",
         "recordType": "AgentAuthorityAuthorizeDecision",
         "ok": verdict == "allow",
@@ -134,6 +147,24 @@ def _decision(
         "receipt_hash": _receipt_hash(core),
         "non_goals": NON_GOALS,
     }
+    # INV-ACC-1 admission is the first gate; surface its verdict on every
+    # decision so a consumer can see the agent was (or was not) admitted.
+    if admission is not None:
+        payload["admission"] = admission
+    return payload
+
+
+def _admission_summary(decision: dict[str, Any]) -> dict[str, Any]:
+    """Compact, runtime-facing view of an admission gate decision."""
+    return {
+        "invariant": "INV-ACC-1",
+        "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+        "verdict": decision.get("verdict"),
+        "reason_code": decision.get("reason_code"),
+        "admission_status": decision.get("admission_status"),
+        "authority_granted": decision.get("authority_granted"),
+        "authority_refs": list(decision.get("authority_refs", [])),
+    }
 
 
 def authorize(
@@ -143,10 +174,21 @@ def authorize(
     source_dir: Path,
     state_file: str | None = None,
     status: str | None = None,
+    admissions_dir: Path = DEFAULT_ADMISSIONS_DIR,
+    enforce_admission: bool = True,
 ) -> dict[str, Any]:
     """Resolve current authority state and return an authorize decision.
 
     Fail-closed: any resolution failure yields a `deny` decision, never allow.
+
+    INV-ACC-1 (Standard 030) is enforced HERE, at runtime, as the first gate:
+    before any authority state is consulted, the agent MUST resolve to a
+    registry admission entry that is admitted+granted. A capability-bearing
+    agent with no resolvable admission entry is DENIED with reason
+    `invisible_authority_no_admission_entry` -- no invisible authority. A
+    `proposed` (visible-but-unsigned) entry never authorizes; it is held at
+    require-review. Only after admission does the authorityEffects state govern
+    the specific action dimension.
     """
     if action not in ACTION_EFFECT:
         return _decision(
@@ -161,6 +203,30 @@ def authorize(
             source_state_hash=None,
         )
 
+    # ---- Gate 1: INV-ACC-1 admission (no invisible authority) -------------- #
+    admission_view: dict[str, Any] | None = None
+    if enforce_admission:
+        adm = admission.resolve_admission_for_ref(agent_ref, Path(admissions_dir))
+        admission_view = _admission_summary(adm)
+        if adm["verdict"] != "admitted":
+            # Not admitted -> the agent has no runtime authority to evaluate.
+            # deny -> deny; proposed/review-required -> require-review (visible
+            # but never auto-authorized). Fail closed either way.
+            authz_verdict = "deny" if adm["verdict"] == "deny" else "require-review"
+            return _decision(
+                verdict=authz_verdict,
+                reason_code=adm["reason_code"],
+                agent_ref=agent_ref,
+                action=action,
+                effect_key=ACTION_EFFECT[action],
+                effect_value=None,
+                authority_status=None,
+                evidence_refs=list(adm.get("authority_refs", [])),
+                source_state_hash=None,
+                admission=admission_view,
+            )
+
+    # ---- Gate 2: authority state governs the specific action dimension ----- #
     # Resolve validated current state via the read-only lookup helper.
     try:
         if state_file:
@@ -189,6 +255,7 @@ def authorize(
             authority_status=None,
             evidence_refs=[],
             source_state_hash=None,
+            admission=admission_view,
         )
 
     authority_status = record.get("authority_status")
@@ -208,6 +275,7 @@ def authorize(
             authority_status=authority_status,
             evidence_refs=evidence_refs,
             source_state_hash=source_state_hash,
+            admission=admission_view,
         )
 
     effects = record.get("authorityEffects", {})
@@ -223,6 +291,7 @@ def authorize(
             authority_status=authority_status,
             evidence_refs=evidence_refs,
             source_state_hash=source_state_hash,
+            admission=admission_view,
         )
 
     effect_value = effects[effect_key]
@@ -243,6 +312,7 @@ def authorize(
         authority_status=authority_status,
         evidence_refs=evidence_refs,
         source_state_hash=source_state_hash,
+        admission=admission_view,
     )
 
 
@@ -253,6 +323,7 @@ def command_authorize(args: argparse.Namespace) -> int:
         source_dir=Path(args.source_dir),
         state_file=args.state_file,
         status=args.status,
+        admissions_dir=Path(args.admissions_dir),
     )
     emit(decision)
     return {"allow": EXIT_ALLOW, "require-review": EXIT_REVIEW, "deny": EXIT_DENY}[decision["verdict"]]
@@ -276,6 +347,13 @@ def build_parser() -> argparse.ArgumentParser:
     authz.add_argument("--status", choices=["active", "reduced", "suspended", "revoked"])
     authz.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR))
     authz.add_argument("--state-file")
+    authz.add_argument(
+        "--admissions-dir",
+        default=str(DEFAULT_ADMISSIONS_DIR),
+        help="Registry admission directory (agents/admissions). INV-ACC-1 is "
+        "always enforced by this surface: an agent with no resolvable, granted "
+        "admission entry here is denied. There is deliberately no bypass flag.",
+    )
     authz.set_defaults(func=command_authorize)
 
     return parser

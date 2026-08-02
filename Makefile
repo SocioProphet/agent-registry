@@ -81,12 +81,20 @@ validate-prophet-mesh-choir-registry:
 	python3 tools/validate_prophet_mesh_choir_registry.py
 
 validate-agent-authority-authorize:
-	# allow: active + unchanged dimension exits 0
+	# allow: admitted agent (agents/admissions/agent-alpha) + active/unchanged dimension exits 0
 	python3 tools/authorize.py check agent-registry://agent-alpha --action tool --state-file contracts/trustops/agent-authority-current-state.active.example.json >/dev/null
 	# fail-closed: revoked authority denies (nonzero) and never authorizes
 	! python3 tools/authorize.py check agent-registry://agent-alpha --action autonomous --state-file contracts/trustops/agent-authority-current-state.revoked.example.json >/dev/null
 	# fail-closed: an invalid (raw-receipt) state denies (nonzero)
 	! python3 tools/authorize.py check agent-registry://agent-alpha --action tool --state-file contracts/trustops/agent-authority-current-state.raw-receipt.invalid.json >/dev/null
+	# INV-ACC-1 RUNTIME TEETH (Standard 030): a capability-bearing agent with a
+	# fully VALID active authority state but NO admission entry is denied at the
+	# authorize surface (nonzero) -- invisible authority never authorizes at runtime.
+	! python3 tools/authorize.py check agent-registry://ghost-agent --action tool --state-file tools/tests/fixtures/admission-runtime/states/ghost-agent.active.json --admissions-dir tools/tests/fixtures/admission-runtime/admissions >/dev/null
+	# fail-closed: a PROPOSED destructive agent (kill.agent) with a valid active state is held at review-required (nonzero), never authorized.
+	! python3 tools/authorize.py check agent-registry://danger-agent --action autonomous --state-file tools/tests/fixtures/admission-runtime/states/danger-agent.active.json --admissions-dir tools/tests/fixtures/admission-runtime/admissions >/dev/null
+	# admit path across an isolated admissions dir: admitted agent + active state exits 0.
+	python3 tools/authorize.py check agent-registry://good-agent --action tool --state-file tools/tests/fixtures/admission-runtime/states/good-agent.active.json --admissions-dir tools/tests/fixtures/admission-runtime/admissions >/dev/null
 	# NOTE: the pytest suite for this surface runs under `make test` (validate.yml
 	# installs pytest); this target stays stdlib-only so it also passes in the
 	# release-dry-run job, which runs `make validate` without pytest.

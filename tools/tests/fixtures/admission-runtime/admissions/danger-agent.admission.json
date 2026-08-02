@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "agent-registry.agent-admission-manifest.v0.1",
+  "recordType": "AgentAdmissionManifest",
+  "agent_id": "agent://socioprophet/danger-agent",
+  "agent_ref": "agent-registry://danger-agent",
+  "source": {
+    "repo": "agent-registry",
+    "path": "tools/tests/fixtures/admission-runtime",
+    "kind": "capability-decl"
+  },
+  "declared_capabilities": [
+    "kill.agent",
+    "exec.command"
+  ],
+  "admission_status": "proposed",
+  "production_admitted": false,
+  "risk_class": "destructive-offensive",
+  "authority": {
+    "granted": false,
+    "authority_refs": [],
+    "owner_repo": "SocioProphet/agent_descriptors",
+    "approval_required_from": "SocioProphet/agent_descriptors agent owner",
+    "sign_off": null
+  },
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_ref": "SocioProphet/agent-registry#53",
+  "notes": "Hermetic runtime-test fixture: a PROPOSED destructive agent (kill.agent). It is VISIBLE but authority.granted=false, so the authorize surface must hold it at require-review and NEVER authorize kill.agent at runtime, even though a valid active authority state exists for it (states/danger-agent.active.json)."
+}
