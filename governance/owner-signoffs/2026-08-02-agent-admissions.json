@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "agent-registry.owner-signoff.v0.1",
+  "recordType": "OwnerSignOffRecord",
+  "signoff_id": "owner-signoff:2026-08-02-agent-admissions",
+  "decided_at": "2026-08-02",
+  "approver": "owner://socioprophet/lord-michael",
+  "approval_channel": "in-session-verbal",
+  "decision": "admitted",
+  "decision_text": "Do them all and I approve it.",
+  "honesty_note": "This records a REAL but VERBAL, in-session owner approval given on 2026-08-02. It is NOT a formal, cryptographically signed document. It is captured here verbatim so the admission evidence points at a real record rather than a dangling evidence:// URI. If a formal signed artifact is later produced, add it under signed_artifact_ref and supersede this record.",
+  "signed_artifact_ref": null,
+  "scope": "The 9 priority destructive/offensive agent admissions in agents/admissions/ promoted from proposed to admitted.",
+  "admitted_agents": [
+    "agent:governor-001",
+    "agent:shell-001",
+    "scope-attack-paths",
+    "scope-enum-iam",
+    "scope-enum-kms",
+    "scope-enum-secrets",
+    "scope-enum-sts",
+    "scope-exploit",
+    "splunk-mcp-server"
+  ],
+  "conditions": [
+    "Admission = VISIBLE + governed, not unconditional authority.",
+    "Each destructive/offensive agent is bound by a real, enforced containment policy under governance/containment/.",
+    "authority.granted=true is legitimate only while the named containment policy resolves to a real file AND its conditions are enforced at runtime by tools/authorize.py."
+  ],
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "gap_refs": [
+    "SocioProphet/agent-registry#53",
+    "SocioProphet/agent-registry#54",
+    "SocioProphet/agent-registry#55"
+  ]
+}

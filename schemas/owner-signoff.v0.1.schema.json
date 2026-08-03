@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://socioprophet.dev/agent-registry/schemas/owner-signoff.v0.1.schema.json",
+  "title": "OwnerSignOffRecord",
+  "description": "An honest record of an owner's admission approval. It captures the actual decision (including a verbal/in-session approval) so an admission's evidence:// ref points at a REAL record rather than a dangling URI. It does NOT assert a formal signed document unless signed_artifact_ref is populated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "recordType",
+    "signoff_id",
+    "decided_at",
+    "approver",
+    "approval_channel",
+    "decision",
+    "decision_text",
+    "admitted_agents",
+    "invariant",
+    "standard_ref"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "agent-registry.owner-signoff.v0.1" },
+    "recordType": { "const": "OwnerSignOffRecord" },
+    "signoff_id": { "type": "string", "minLength": 1 },
+    "decided_at": { "type": "string" },
+    "approver": { "type": "string" },
+    "approval_channel": {
+      "type": "string",
+      "enum": ["in-session-verbal", "email", "signed-document", "chatops"],
+      "description": "How the approval was given. in-session-verbal is honest about a spoken/typed in-session approval that is NOT a formal signed artifact."
+    },
+    "decision": { "type": "string", "enum": ["admitted", "denied"] },
+    "decision_text": { "type": "string", "description": "The owner's actual words, verbatim." },
+    "honesty_note": { "type": "string" },
+    "signed_artifact_ref": { "type": ["string", "null"] },
+    "scope": { "type": "string" },
+    "admitted_agents": { "type": "array", "items": { "type": "string" } },
+    "conditions": { "type": "array", "items": { "type": "string" } },
+    "invariant": { "const": "INV-ACC-1" },
+    "standard_ref": { "type": "string" },
+    "gap_refs": { "type": "array", "items": { "type": "string" } }
+  }
+}

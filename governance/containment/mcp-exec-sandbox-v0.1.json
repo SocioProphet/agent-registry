@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "agent-registry.containment-policy.v0.1",
+  "recordType": "ContainmentPolicy",
+  "policy_ref": "policy://containment/mcp-exec-sandbox-v0.1",
+  "title": "Splunk MCP arbitrary-command containment (sandbox + human-in-loop)",
+  "description": "Bounds the Splunk MCP server surface exposing cmd:bash / cmd:npx (arbitrary command execution). Deny-by-default: the command surface runs ONLY in a non-production sandbox, under human-in-the-loop, within a single namespace.",
+  "governs_capabilities": [
+    "cmd:bash",
+    "cmd:npx"
+  ],
+  "default_effect": "deny",
+  "denied_environments": [
+    "prod",
+    "production"
+  ],
+  "required_conditions": {
+    "environment_in": [
+      "dev",
+      "staging",
+      "sandbox"
+    ],
+    "require_sandbox": true,
+    "require_human_in_loop": true,
+    "namespace_scope_in": [
+      "single"
+    ]
+  },
+  "enforcement": "deny-by-default: tools/authorize.py DENIES the action unless every required_condition is satisfied by the action context and this policy file resolves. A missing context value for a required condition is treated as unmet (fail-closed).",
+  "owner_repo": "SocioProphet/SCOPE-D",
+  "invariant": "INV-ACC-1",
+  "standard_ref": "socioprophet-agent-standards/docs/standards/030",
+  "signoff_ref": "governance/owner-signoffs/2026-08-02-agent-admissions.json",
+  "gap_refs": [
+    "SocioProphet/agent-registry#53",
+    "SocioProphet/agent-registry#54",
+    "SocioProphet/agent-registry#55"
+  ]
+}

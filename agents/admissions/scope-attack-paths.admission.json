@@ -13,23 +13,43 @@
     "Glob",
     "Grep"
   ],
-  "admission_status": "proposed",
-  "production_admitted": false,
+  "admission_status": "admitted",
+  "production_admitted": true,
   "risk_class": "destructive-offensive",
   "authority": {
-    "granted": false,
-    "authority_refs": [],
+    "granted": true,
+    "authority_refs": [
+      "grant://agent/scope-attack-paths/recon-readonly",
+      "policy://containment/scope-d-offensive-sandbox-v0.1",
+      "policy://trustops/agent-authority-v0.1",
+      "standard://socioprophet-agent-standards/030",
+      "evidence://agent-registry/owner-signoff/2026-08-02-agent-admissions"
+    ],
     "owner_repo": "SocioProphet/SCOPE-D",
     "approval_required_from": "SocioProphet/SCOPE-D agent owner",
-    "sign_off": null
+    "sign_off": {
+      "approver": "owner://socioprophet/lord-michael",
+      "decision": "admitted",
+      "approval_channel": "in-session-verbal",
+      "decided_at": "2026-08-02T00:00:00Z",
+      "evidence_ref": "evidence://agent-registry/owner-signoff/2026-08-02-agent-admissions",
+      "evidence_record_path": "governance/owner-signoffs/2026-08-02-agent-admissions.json",
+      "gap_refs": [
+        "SocioProphet/agent-registry#53",
+        "SocioProphet/agent-registry#54",
+        "SocioProphet/agent-registry#55"
+      ],
+      "containment_ref": "policy://containment/scope-d-offensive-sandbox-v0.1",
+      "containment_required": true
+    }
   },
   "invariant": "INV-ACC-1",
   "standard_ref": "socioprophet-agent-standards/docs/standards/030",
   "gap_ref": "SocioProphet/agent-registry#53",
   "non_claims": [
-    "PROPOSED admission stub. This does NOT grant authority.",
-    "authority.granted is false and authority_refs is empty pending human owner sign-off.",
-    "Created by the INV-ACC-1 remediation to make invisible authority VISIBLE, not to authorize it."
+    "ADMITTED per owner sign-off (Lord Michael, 2026-08-02); authority.granted is true.",
+    "Admission makes this agent VISIBLE + admitted -- it does NOT hand it unconditional authority. The runtime authority state and the fail-closed authorize gate (tools/authorize.py) still govern each individual action dimension; a destructive verb is only exercised under the containment ref (policy://containment/scope-d-offensive-sandbox-v0.1).",
+    "authority_refs carry the warranting owner grant, the governing Standard 030 / trustops policy, the owner sign-off evidence, and the CONTAINMENT ref -- approval is governed, not omnipotent."
   ],
-  "notes": "WHY FLAGGED: Attack-path enumeration subagent with Bash and no governing authority ref. Making it visible satisfies 'no invisible authority' but the gate holds it at review-required (exit 3) until SocioProphet/SCOPE-D signs off (admission_status=admitted, authority.granted=true, authority_refs populated)."
+  "notes": "ADMITTED: attack-path enumeration (Bash recon). Owner (SocioProphet/SCOPE-D / Lord Michael) signed off 2026-08-02 (evidence evidence://agent-registry/owner-signoff/2026-08-02-agent-admissions); the runtime admission gate (tools/authorize.py, SocioProphet/agent-registry#55) now resolves this ref to admitted (was review-required). Governed, not unconditional: the per-action authority state still gates each action and the destructive/offensive capability is bounded by the containment ref policy://containment/scope-d-offensive-sandbox-v0.1."
 }

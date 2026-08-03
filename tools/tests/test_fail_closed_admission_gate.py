@@ -67,7 +67,10 @@ def test_capability_without_admission_entry_denies() -> None:
     assert code == EXIT_DENY
 
 
-# ---- proposed stubs make authority visible but never authorize --------------
+# ---- owner-signed-off: the priority destructive/offensive subset is admitted -
+# Lord Michael (owner) approved these 9 on 2026-08-02; each admission is now
+# admitted+granted and carries a CONTAINMENT ref so approval is governed, not
+# omnipotent (SocioProphet/agent-registry#53/#54/#55, Standard 030 INV-ACC-1).
 
 @pytest.mark.parametrize(
     "stem",
@@ -83,15 +86,42 @@ def test_capability_without_admission_entry_denies() -> None:
         "splunk-mcp-server",
     ],
 )
-def test_proposed_dangerous_stub_is_review_required_not_authorized(stem: str) -> None:
+def test_owner_approved_destructive_subset_is_admitted_and_contained(stem: str) -> None:
     code, out = check(DECLARED / f"{stem}.declared.json")
-    assert out["verdict"] == "review-required"
-    assert out["ok"] is False
-    assert out["admission_status"] == "proposed"
-    assert out["authority_granted"] is False
-    assert out["authority_refs"] == []  # authority is NOT granted by the stub
-    assert out["reason_code"] == "proposed_admission_pending_owner_sign_off"
-    assert code == EXIT_REVIEW
+    assert out["verdict"] == "admitted"
+    assert out["ok"] is True
+    assert out["admission_status"] == "admitted"
+    assert out["authority_granted"] is True
+    assert out["reason_code"] == "admitted_with_authority"
+    assert out["authority_refs"]  # warranting refs are populated on sign-off
+    # governed, not omnipotent: a containment/policy ref must be present for the
+    # destructive/offensive class so admission != unconditional authority.
+    assert any(ref.startswith("policy://containment/") for ref in out["authority_refs"])
+    # the owner sign-off evidence is recorded among the warranting refs.
+    assert (
+        "evidence://agent-registry/owner-signoff/2026-08-02-agent-admissions"
+        in out["authority_refs"]
+    )
+    assert code == EXIT_ADMITTED
+
+
+def test_admitted_destructive_agent_denied_when_containment_policy_absent(tmp_path: Path) -> None:
+    # Point the gate at an EMPTY governance dir: the admitted governor-001's
+    # containment ref no longer resolves to a real policy file, so the static
+    # gate fail-closes to DENY. A nominal containment string cannot pass.
+    empty_gov = tmp_path / "governance"
+    (empty_gov / "containment").mkdir(parents=True)
+    code, out = run(
+        "check",
+        str(DECLARED / "agent-governor-001.declared.json"),
+        "--admissions-dir",
+        str(ADMISSIONS),
+        "--governance-dir",
+        str(empty_gov),
+    )
+    assert out["verdict"] == "deny"
+    assert out["reason_code"] == "containment_policy_unresolved"
+    assert code == EXIT_DENY
 
 
 # ---- fail-closed on every malformed / unresolvable input -------------------
@@ -212,13 +242,17 @@ def test_no_declared_capability_is_not_gated(tmp_path: Path) -> None:
     assert code == EXIT_ADMITTED
 
 
-def test_scan_aggregate_holds_priority_population_below_admitted() -> None:
+def test_scan_priority_population_is_admitted_after_owner_sign_off() -> None:
+    # After the owner (Lord Michael, 2026-08-02) signed off, the whole priority
+    # population (9 destructive/offensive agents + the benign example) resolves
+    # to admitted; the aggregate is a clean admitted (exit 0). The fail-closed
+    # teeth live in test_scan_denies_when_any_agent_has_no_admission below.
     code, out = run("scan", str(DECLARED), "--admissions-dir", str(ADMISSIONS))
-    assert out["aggregate_verdict"] == "review-required"
+    assert out["aggregate_verdict"] == "admitted"
     assert out["counts"]["denied"] == 0
-    assert out["counts"]["review_required"] == 9
-    assert out["counts"]["admitted"] == 1
-    assert code == EXIT_REVIEW
+    assert out["counts"]["review_required"] == 0
+    assert out["counts"]["admitted"] == 10
+    assert code == EXIT_ADMITTED
 
 
 def test_scan_denies_when_any_agent_has_no_admission(tmp_path: Path) -> None:
